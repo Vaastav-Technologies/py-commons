@@ -58,8 +58,9 @@ multitest = ["tox"]
 doc = ["sphinx", "sphinx-argparse"]
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 exclude = ["*.py"]
+namespaces = true
 
 [tool.tox]
 legacy_tox_ini = """
