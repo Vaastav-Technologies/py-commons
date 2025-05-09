@@ -1,0 +1,86 @@
+[build-system]
+# A list of packages that are needed to build your package:
+requires = ["setuptools", "wheel"]  # REQUIRED if [build-system] table is used
+# The name of the Python object that frontends will use to perform the build:
+build-backend = "setuptools.build_meta"  # If not defined, then legacy behavior can happen.
+
+
+[project]
+name = "vt-commons"
+version = "0.0.0"
+description = "Reusable common utilities, interfaces and implementations for python projects."
+readme = "README"
+authors = [
+    {name = "Suhas Krishna Srivastava", email = "suhas.srivastava@vaastav.tech"}
+]
+maintainers = [
+    {name = "Suhas Krishna Srivastava", email = "suhas.srivastava@vaastav.tech"}
+]
+requires-python = ">=3.12"
+# For a list of valid classifiers, see https://pypi.org/classifiers/
+classifiers = [
+  "Development Status :: 1 - Planning",
+
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+
+  "Topic :: Education",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
+
+  "License :: License :: Free For Educational Use",
+
+  # Specify the Python versions you support here. In particular, ensure
+  # that you indicate you support Python 3. These classifiers are *not*
+  # checked by "pip install". See instead "requires-python" key in this file.
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+  "Programming Language :: Python :: 3 :: Only",
+
+  "Typing :: Typed"
+]
+# List additional groups of dependencies here (e.g. development
+# dependencies). Users will be able to install these using the "extras"
+# syntax, for example:
+#
+#   $ pip install sampleproject[dev]
+#
+# Optional dependencies the project provides. These are commonly
+# referred to as "extras". For a more extensive definition see:
+# https://packaging.python.org/en/latest/specifications/dependency-specifiers/#extras
+[project.optional-dependencies]
+dev = ["check-manifest", "mypy"]
+test = ["pytest", "coverage"]
+multitest = ["tox"]
+doc = ["sphinx", "sphinx-argparse"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["*.py"]
+
+[tool.tox]
+legacy_tox_ini = """
+    [tox]
+    env_list =
+        py312
+
+    [testenv]
+    deps =
+      pytest
+      sphinx
+      sphinx-argparse
+    commands =
+      python -m pytest --doctest-glob=*.rst --doctest-modules .
+      python -m doctest README.md
+      sphinx-build -q -b doctest docs/source docs/build/doctest
+
+    [testenv:docs]
+    deps =
+      sphinx
+      sphinx-argparse
+    commands =
+      sphinx-build -q -b html docs/source docs/build/html
+"""
