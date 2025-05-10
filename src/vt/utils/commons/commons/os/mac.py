@@ -15,14 +15,14 @@ https://docs.python.org/3/library/platform.html#platform.system
 """
 
 
-def not_mac():
+def not_mac() -> bool:
     """
     :return: ``True`` if system is not mac. ``False`` otherwise.
     """
     return not is_mac()
 
 
-def is_mac():
+def is_mac() -> bool:
     """
     :return: ``True`` if system is mac. ``False`` otherwise.
     """

@@ -15,14 +15,14 @@ https://docs.python.org/3/library/platform.html#platform.system
 """
 
 
-def not_windows():
+def not_windows() -> bool:
     """
     :return: ``True`` if system is not windows. ``False`` otherwise.
     """
     return not is_windows()
 
 
-def is_windows():
+def is_windows() -> bool:
     """
     :return: ``True`` if system is windows. ``False`` otherwise.
     """

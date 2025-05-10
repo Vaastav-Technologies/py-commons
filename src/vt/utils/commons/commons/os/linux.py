@@ -15,14 +15,14 @@ https://docs.python.org/3/library/platform.html#platform.system
 """
 
 
-def not_linux():
+def not_linux() -> bool:
     """
     :return: ``True`` if system is not linux. ``False`` otherwise.
     """
     return not is_linux()
 
 
-def is_linux():
+def is_linux() -> bool:
     """
     :return: ``True`` if system is linux. ``False`` otherwise.
     """

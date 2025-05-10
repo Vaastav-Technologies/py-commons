@@ -16,14 +16,14 @@ https://docs.python.org/3/library/os.html#os.name
 """
 
 
-def not_posix():
+def not_posix() -> bool:
     """
     :return: ``True`` if system is not POSIX. ``False`` otherwise.
     """
     return not is_posix()
 
 
-def is_posix():
+def is_posix() -> bool:
     """
     :return: ``True`` if system is POSIX. ``False`` otherwise.
     """
