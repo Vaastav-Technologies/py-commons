@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+# coding=utf-8
+
+"""
+Reusable utilities related to core python.
+"""
+
+from typing import Any, cast
+from vt.utils.commons.commons.py.base import MISSING, MISSING_TYPE
+
+
+def is_missing[T](obj: T) -> bool:
+    """
+    Determine whether an ``obj`` is ``MISSING``, i.e. not supplied by the caller.
+
+    Examples:
+
+    * ``obj`` is ``MISSING``, i.e. not supplied by the caller:
+
+    >>> obj_to_test = MISSING
+    >>> is_missing(obj_to_test)
+    True
+
+    * ``obj`` is supplied but ``None``, i.e. it is supplied by the caller and hence, not missing:
+
+    >>> is_missing(None)
+    False
+
+    * ``obj`` is truthy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not missing:
+
+    >>> is_missing(2) or is_missing('a') or is_missing(2.5) or is_missing(True) or is_missing(1+0j) or is_missing(b'y')
+    False
+
+    * ``obj`` is falsy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not missing:
+
+    >>> is_missing(0) or is_missing('') or is_missing(0.0) or is_missing(False) or is_missing(0j) or is_missing(b'')
+    False
+
+    * ``obj`` is truthy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not missing:
+
+    >>> is_missing([1, 2, 3]) or is_missing({1: 'a', 2: 'b'}) or is_missing({2.5, 2.0})
+    False
+
+    * ``obj`` is falsy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not missing:
+
+    >>> is_missing([]) or is_missing({}) or is_missing(set())
+    False
+
+    :param obj: object to be tested whether it was supplied by caller or not.
+    :return: ``True`` if the ``obj`` is missing and not supplied by caller, ``False`` otherwise.
+    """
+    return obj == MISSING
+
+
+def alt_if_missing[T](obj: Any | MISSING_TYPE, alt: T) -> T:
+    """
+    Get an alternate object ``alt`` if the queried object ``obj`` is ``MISSING``, i.e. it is not supplied by the caller.
+
+    Note::
+
+        Returned value is always of the type of alt object.
+
+    Example:
+
+    * Main object ``obj`` is returned if it is not ``MISSING``, i.e. it was supplied by the caller. Also, the returned
+      object ``obj`` is of the type of alternative ``alt`` object, test for falsy ``obj`` objects:
+
+    >>> assert alt_if_missing(None, None) is None
+    >>> assert alt_if_missing(0, 2) == 0
+    >>> assert alt_if_missing(0.0, 1.3) == 0.0
+    >>> assert alt_if_missing('', 'z') == ''
+    >>> assert alt_if_missing([], [1, 2, 3]) == []
+    >>> assert alt_if_missing({}, {'a': 1, 'b': 2}) == {}
+    >>> assert alt_if_missing(set(), {1, 2, 3}) == set()
+    >>> assert alt_if_missing(0j, 1+2j) == 0j
+
+    * Main object ``obj`` is returned if it is not ``MISSING``, i.e. it was supplied by the caller. Also, the returned
+      object ``obj`` is of the type of alternative ``alt`` object, test for truthy ``obj`` objects:
+
+    >>> assert alt_if_missing('a', 'null') == 'a'
+    >>> assert alt_if_missing(-1, 2) == -1
+    >>> assert alt_if_missing(0.9, 1.3) == 0.9
+    >>> assert alt_if_missing('jo', 'z') == 'jo'
+    >>> assert alt_if_missing([9, 8, 7], [1, 2, 3]) == [9, 8, 7]
+    >>> assert alt_if_missing({'z': 10, 'y': 9, 'x': 8}, {'a': 1, 'b': 2}) == {'z': 10, 'y': 9, 'x': 8}
+    >>> assert alt_if_missing({0, 9, 8}, {1, 2, 3}) == {0, 9, 8}
+    >>> assert alt_if_missing(1+0j, 1+2j) == 1+0j
+
+    * Alternate object ``alt`` is returned when main object ``obj`` is ``MISSING``, i.e. it was not supplied by
+      the caller. Also, the returned object ``alt`` is of the type of alternative ``alt`` object:
+
+    >>> assert alt_if_missing(MISSING, None) is None
+    >>> assert alt_if_missing(MISSING, 0) == 0
+    >>> assert alt_if_missing(MISSING, 0.0) == 0,0
+    >>> assert alt_if_missing(MISSING, '') == ''
+    >>> assert alt_if_missing(MISSING, []) == []
+    >>> assert alt_if_missing(MISSING, {}) == {}
+    >>> assert alt_if_missing(MISSING, set()) == set()
+    >>> assert alt_if_missing(MISSING, 0j) == 0j
+
+    * Errs if main object ``obj`` is not ``MISSING`` and hence, is supplied by the caller, but its type is different
+      from the type of the alternative ``alt`` object:
+
+    >>> alt_if_missing('a', 2)
+    Traceback (most recent call last):
+    TypeError: Unexpected type: `obj` and `alt` must be of the same type. type(obj): <class 'str'>, type(alt): <class 'int'>
+
+    >>> alt_if_missing([], (2, 3, 4))
+    Traceback (most recent call last):
+    TypeError: Unexpected type: `obj` and `alt` must be of the same type. type(obj): <class 'list'>, type(alt): <class 'tuple'>
+
+    :param obj: object to be tested whether it was supplied by caller or not.
+    :param alt: alternate object to be returned if ``obj`` was not supplied by the caller.
+    :return: ``obj`` if it was supplied by the caller else ``alt``.
+    """
+    if is_missing(obj):
+        return alt
+    if type(obj) != type(alt):
+        raise TypeError(f"Unexpected type: `obj` and `alt` must be of the same type. type(obj): {type(obj)}, "
+                        f"type(alt): {type(alt)}")
+    return alt if is_missing(obj) else cast(T, obj)
+
+
+def is_ellipses(obj: Any) -> bool:
+    """
+    :param obj: object to be tested whether it was supplied by caller or not.
+    :return: ``True`` if the ``obj`` is missing and not supplied by caller, ``False`` otherwise.
+    """
+    return obj is ...
+
+
+def alt_if_ellipses[T](obj, alt: T) -> T:
+    """
+    :param obj: object to be tested whether it was supplied by caller or not.
+    :param alt: alternate object to be returned if ``obj`` was not supplied by the caller.
+    :return: ``obj`` if it was supplied by the caller else ``alt``.
+    """
+    return alt if is_ellipses(obj) else cast(T, obj)
