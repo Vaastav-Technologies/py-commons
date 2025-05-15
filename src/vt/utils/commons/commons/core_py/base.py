@@ -5,7 +5,7 @@
 Reusable interfaces and sentinel objects related to core python.
 """
 
-from vt.utils.commons.commons.py._base import _MISSING
+from vt.utils.commons.commons.core_py._base import _MISSING
 
 MISSING = _MISSING()
 """

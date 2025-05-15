@@ -6,7 +6,7 @@ Reusable utilities related to core python.
 """
 
 from typing import Any, cast
-from vt.utils.commons.commons.py.base import MISSING, MISSING_TYPE
+from vt.utils.commons.commons.core_py.base import MISSING, MISSING_TYPE
 
 
 def is_missing[T](obj: T) -> bool:
