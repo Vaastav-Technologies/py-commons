@@ -182,4 +182,4 @@ def fallback_on_none[T](value:T | None, default_val: T) -> T:
     :param default_val: returned if ``value`` is ``None``.
     :return: ``default_val`` if ``value`` is ``None`` else ``value``.
     """
-    return default_val if value is None else value
+    return default_val if value is None else cast(T, value)
