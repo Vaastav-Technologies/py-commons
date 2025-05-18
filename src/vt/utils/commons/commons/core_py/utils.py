@@ -142,7 +142,7 @@ def alt_if_ellipses[T](obj, alt: T) -> T:
     return alt if is_ellipses(obj) else cast(T, obj)
 
 
-def fallback_on_none[T](value:T | None, default_val: T) -> T:
+def fallback_on_none[T](value:T | None, default_val: T | None) -> T | None:
     """
     Get ``value`` if it is non-``None`` else get ``default_val``.
 
@@ -182,4 +182,4 @@ def fallback_on_none[T](value:T | None, default_val: T) -> T:
     :param default_val: returned if ``value`` is ``None``.
     :return: ``default_val`` if ``value`` is ``None`` else ``value``.
     """
-    return default_val if value is None else cast(T, value)
+    return default_val if value is None else value
