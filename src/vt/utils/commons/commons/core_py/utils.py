@@ -185,16 +185,16 @@ def fallback_on_none[T](value:T | None, default_val: T | None) -> T | None:
     return default_val if value is None else value
 
 
-def fallback_on_non_strict[T](value: T | None, default_val: T) -> T:
+def fallback_on_none_strict[T](value: T | None, default_val: T) -> T:
     """
     Same as ``fallback_on_non_strict()`` but has an assertion guarantee that ``default_val`` is non-``None``.
 
     Examples:
 
-    >>> fallback_on_non_strict('a', 'b')
+    >>> fallback_on_none_strict('a', 'b')
     'a'
 
-    >>> fallback_on_non_strict('a',
+    >>> fallback_on_none_strict('a',
     ...                         None) # noqa: just for example
     Traceback (most recent call last):
     AssertionError: default_val must not be None.
