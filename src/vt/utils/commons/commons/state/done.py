@@ -49,9 +49,9 @@ class DoneEnquirer[T](Protocol):
         """
         ...
 
-    def get_first_done(self, ids: Sequence[T], default: T) -> T:
+    def get_first_done(self, ids: Sequence[T], default_val: T) -> T:
         """
-        Get the first id which is marked as ``done`` else get the ``default``.
+        Get the first id which is marked as ``done`` else get the ``default_val``.
 
         Examples:
 
@@ -75,15 +75,15 @@ class DoneEnquirer[T](Protocol):
             -1
 
         :param ids: sequence of id(s) from which the first ever ``done`` id is to be found.
-        :param default: value returned if no id is marked as ``done`` from the ``ids`` list.
+        :param default_val: value returned if no id is marked as ``done`` from the ``ids`` list.
         :return: the first id from the list of ``ids`` which is marked ``done`` by the ``done_enquirer`` or
-            ``default`` if no id was identified as ``done``.
+            ``default_val`` if no id was identified as ``done``.
         """
-        return get_first_true(ids, default, self.is_done)
+        return get_first_true(ids, default_val, self.is_done)
 
-    def get_last_done(self, ids: Sequence[T], default: T) -> T:
+    def get_last_done(self, ids: Sequence[T], default_val: T) -> T:
         """
-        Get the last id which is marked as ``done`` else get the ``default``.
+        Get the last id which is marked as ``done`` else get the ``default_val``.
 
         Examples:
 
@@ -107,11 +107,11 @@ class DoneEnquirer[T](Protocol):
             -1
 
         :param ids: sequence of id(s) from which the last ``done`` id is to be found.
-        :param default: value returned if no id is marked as ``done`` from the ``ids`` list.
+        :param default_val: value returned if no id is marked as ``done`` from the ``ids`` list.
         :return: the last id from the list of ``ids`` which is marked ``done`` by the ``done_enquirer`` or
-            ``default`` if no id was identified as ``done``.
+            ``default_val`` if no id was identified as ``done``.
         """
-        return get_last_true(ids, default, self.is_done)
+        return get_last_true(ids, default_val, self.is_done)
 
 
 class DoneVisitor[T](DoneMarker[T], DoneEnquirer[T], Protocol):
