@@ -140,3 +140,46 @@ def alt_if_ellipses[T](obj, alt: T) -> T:
     :return: ``obj`` if it was supplied by the caller else ``alt``.
     """
     return alt if is_ellipses(obj) else cast(T, obj)
+
+
+def fallback_on_none[T](value:T | None, default_val: T) -> T:
+    """
+    Get ``value`` if it is non-``None`` else get ``default_val``.
+
+    Examples:
+
+    >>> fallback_on_none('a', 'b')
+    'a'
+
+    >>> fallback_on_none(None, 'b')
+    'b'
+
+    >>> fallback_on_none(None, True)
+    True
+
+    >>> fallback_on_none(True, False)
+    True
+
+    * on Falsy values:
+
+    >>> fallback_on_none([], [1, 2])
+    []
+
+    >>> fallback_on_none({}, {1: 2, 2: 3})
+    {}
+
+    >>> fallback_on_none(set(), {1, 2, 3})
+    set()
+
+    >>> fallback_on_none((),
+    ...                 (1, 2, 3)) # noqa: some tuple warning
+    ()
+
+    >>> fallback_on_none(False, True)
+    False
+
+    :param value: The main value to return if it is not ``None``.
+    :param default_val: returned if ``value`` is ``None``.
+    :return: ``default_val`` if ``value`` is ``None`` else ``value``.
+    """
+    return default_val if value is None else value
