@@ -4,15 +4,16 @@
 """
 Reusable interfaces and sentinel objects related to core python.
 """
+from typing import TypeAlias, Final
 
 from vt.utils.commons.commons.core_py._base import _MISSING
 
-MISSING_TYPE = _MISSING
+MISSING_TYPE: TypeAlias = _MISSING
 """
 Sentinel value type useful for type hinting.
 """
 
-MISSING = MISSING_TYPE()
+MISSING: Final[MISSING_TYPE] = MISSING_TYPE()
 """
 Sentinel to represent a missing value. Can be used:
 
