@@ -6,7 +6,7 @@ Reusable utilities related to core python.
 """
 
 from typing import Any, cast
-from vt.utils.commons.commons.core_py.base import MISSING, MISSING_TYPE
+from vt.utils.commons.commons.core_py.base import MISSING, MISSING_TYPE, UNSET
 
 
 def is_missing[T](obj: T) -> bool:
@@ -54,6 +54,53 @@ def is_missing[T](obj: T) -> bool:
     :return: ``True`` if the ``obj`` is missing and not supplied by caller, ``False`` otherwise.
     """
     return obj == MISSING
+
+
+def is_unset[T](obj: T) -> bool:
+    """
+    Determine whether an ``obj`` is ``UNSET``, i.e. deliberately unset an already set value by the caller.
+
+    Examples:
+
+    * ``obj`` is ``UNSET``, i.e. deliberately unset by the caller:
+
+    >>> obj_to_test = UNSET
+    >>> is_unset(obj_to_test)
+    True
+
+    * ``obj`` is supplied but ``None``, i.e. it is supplied by the caller and hence, not unset:
+
+    >>> is_unset(None)
+    False
+
+    * ``obj`` is truthy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not unset:
+
+    >>> is_unset(2) or is_unset('a') or is_unset(2.5) or is_unset(True) or is_unset(1+0j) or is_unset(b'y')
+    False
+
+    * ``obj`` is falsy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not unset:
+
+    >>> is_unset(0) or is_unset('') or is_unset(0.0) or is_unset(False) or is_unset(0j) or is_unset(b'')
+    False
+
+    * ``obj`` is truthy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not unset:
+
+    >>> is_unset([1, 2, 3]) or is_unset({1: 'a', 2: 'b'}) or is_unset({2.5, 2.0})
+    False
+
+    * ``obj`` is falsy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
+      hence, not unset:
+
+    >>> is_unset([]) or is_unset({}) or is_unset(set())
+    False
+
+    :param obj: object to be tested whether it was supplied by caller or not.
+    :return: ``True`` if the ``obj`` is deliberatley unset by the caller, ``False`` otherwise.
+    """
+    return obj == UNSET
 
 
 def alt_if_missing[T](obj: Any | MISSING_TYPE, alt: T) -> T:
