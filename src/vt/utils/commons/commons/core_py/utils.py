@@ -100,7 +100,7 @@ def is_unset[T](obj: T) -> bool:
     :param obj: object to be tested whether it was supplied by caller or not.
     :return: ``True`` if the ``obj`` is deliberatley unset by the caller, ``False`` otherwise.
     """
-    return is_missing(obj)
+    return obj is UNSET
 
 
 def _alt_if_predicate_true[T, U](obj: Any | U, alt: T, predicate: Callable[[Any | U], bool]) -> T:
