@@ -53,7 +53,7 @@ def is_missing[T](obj: T) -> bool:
     :param obj: object to be tested whether it was supplied by caller or not.
     :return: ``True`` if the ``obj`` is missing and not supplied by caller, ``False`` otherwise.
     """
-    return obj == MISSING
+    return obj is MISSING
 
 
 def is_unset[T](obj: T) -> bool:
