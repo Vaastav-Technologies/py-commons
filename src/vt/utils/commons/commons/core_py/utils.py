@@ -6,7 +6,7 @@ Reusable utilities related to core python.
 """
 from collections.abc import Callable
 from typing import Any, cast
-from vt.utils.commons.commons.core_py.base import MISSING, MISSING_TYPE, UNSET, UNSET_TYPE
+from vt.utils.commons.commons.core_py.base import MISSING, Missing, UNSET, Unset
 
 
 def is_missing[T](obj: T) -> bool:
@@ -124,7 +124,7 @@ def _alt_if_predicate_true[T, U](obj: Any | U, alt: T, predicate: Callable[[Any 
     return alt if is_missing(obj) else cast(T, obj)
 
 
-def alt_if_missing[T](obj: Any | MISSING_TYPE, alt: T) -> T:
+def alt_if_missing[T](obj: Any | Missing, alt: T) -> T:
     """
     Get an alternate object ``alt`` if the queried object ``obj`` is ``MISSING``, i.e. it is not supplied by the caller.
 
@@ -188,7 +188,7 @@ def alt_if_missing[T](obj: Any | MISSING_TYPE, alt: T) -> T:
     return _alt_if_predicate_true(obj, alt, is_missing)
 
 
-def alt_if_unset[T](obj: Any | UNSET_TYPE, alt: T) -> T:
+def alt_if_unset[T](obj: Any | Unset, alt: T) -> T:
     """
     Get an alternate object ``alt`` if the queried object ``obj`` is ``UNSET``, i.e. it is deliberately unset by
     the caller.
