@@ -5,11 +5,11 @@
 Reusable utilities related to core python.
 """
 from collections.abc import Callable
-from typing import Any, cast
+from typing import Any, cast, TypeGuard
 from vt.utils.commons.commons.core_py.base import MISSING, Missing, UNSET, Unset
 
 
-def is_missing[T](obj: T) -> bool:
+def is_missing[T](obj: T) -> TypeGuard[Missing]:
     """
     Determine whether an ``obj`` is ``MISSING``, i.e. not supplied by the caller.
 
@@ -56,7 +56,7 @@ def is_missing[T](obj: T) -> bool:
     return obj is MISSING
 
 
-def is_unset[T](obj: T) -> bool:
+def is_unset[T](obj: T) -> TypeGuard[Unset]:
     """
     Determine whether an ``obj`` is ``UNSET``, i.e. deliberately unset an already set value by the caller.
 
