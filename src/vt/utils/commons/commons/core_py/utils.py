@@ -103,6 +103,86 @@ def is_unset[T](obj: T) -> TypeGuard[Unset]:
     return obj is UNSET
 
 
+def not_none_not_sentinel[T, S](val: T | None, *, sentinel: S) -> TypeGuard[T]:
+    """
+    Returns True if ``val`` is not None and not the given sentinel.
+
+    Used to create specific type guards for `UNSET`, `MISSING`, or any custom sentinel.
+
+    >>> not_none_not_sentinel("x", sentinel=UNSET)
+    True
+    >>> not_none_not_sentinel(None, sentinel=UNSET)
+    False
+    >>> not_none_not_sentinel(UNSET, sentinel=UNSET)
+    False
+    """
+    return val is not None and val is not sentinel
+
+
+def not_none_not_unset[T](val: T | None | Unset) -> TypeGuard[T]:
+    """
+    Check if the value is neither None nor UNSET.
+
+    >>> not_none_not_unset("a")
+    True
+    >>> not_none_not_unset(None)
+    False
+    >>> not_none_not_unset(UNSET)
+    False
+
+    >>> not_none_not_unset(0)
+    True
+    >>> not_none_not_unset("")
+    True
+    >>> not_none_not_unset(False)
+    True
+    >>> not_none_not_unset([])
+    True
+    >>> not_none_not_unset({})
+    True
+    >>> not_none_not_unset(set())
+    True
+
+    >>> _val: int | None | Unset = 5
+    >>> if not_none_not_unset(_val):
+    ...     type(_val)  # Revealed type is "int"
+    <class 'int'>
+    """
+    return not_none_not_sentinel(val, sentinel=UNSET)
+
+
+def not_none_not_missing[T](val: T | None | Missing) -> TypeGuard[T]:
+    """
+    Check if the value is neither None nor MISSING.
+
+    >>> not_none_not_missing("b")
+    True
+    >>> not_none_not_missing(None)
+    False
+    >>> not_none_not_missing(MISSING)
+    False
+
+    >>> not_none_not_missing(0)
+    True
+    >>> not_none_not_missing("")
+    True
+    >>> not_none_not_missing(False)
+    True
+    >>> not_none_not_missing([])
+    True
+    >>> not_none_not_missing({})
+    True
+    >>> not_none_not_missing(set())
+    True
+
+    >>> _val: str | None | Missing = "hello"
+    >>> if not_none_not_missing(_val):
+    ...     type(_val)  # Revealed type is "str"
+    <class 'str'>
+    """
+    return not_none_not_sentinel(val, sentinel=MISSING)
+
+
 def _alt_if_predicate_true[T, U](obj: Any | U, alt: T, predicate: Callable[[Any | U], bool]) -> T:
     """
     Get an alternate object ``alt`` if the queried object ``obj`` is ``MISSING``, i.e. it is not supplied by the caller.
