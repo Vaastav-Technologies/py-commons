@@ -7,7 +7,7 @@ Reusable interfaces for python projects related to operations.
 from __future__ import annotations
 from abc import abstractmethod
 from pathlib import Path
-from typing import Protocol, override
+from typing import Protocol, override, final
 
 
 class ReversibleOp(Protocol):
@@ -32,7 +32,32 @@ class RootDirOp(Protocol):
     @property
     @abstractmethod
     def root_dir(self) -> Path:
+        """
+        :return: Path to the ``root_dir`` root directory for thi operation.
+        """
         ...
+
+
+class CWDRootDirOp(RootDirOp):
+    def __init__(self, root_dir=Path.cwd()):
+        """
+        Perform operations on the root_dir.
+
+        :param root_dir: the path to the root directory.
+        """
+        self._root_dir = root_dir
+
+    @override
+    @property
+    def root_dir(self) -> Path:
+        return self._root_dir
+
+
+@final
+class RootDirOps:
+    """
+    A factory-like class for ``RootDirOp``.
+    """
 
     @staticmethod
     def strictly_one_required(root_dir: Path | None = None, root_dir_op: RootDirOp | None = None, *,
@@ -44,21 +69,21 @@ class RootDirOp(Protocol):
 
           * OK: only root-dir supplied:
 
-            >>> RootDirOp.strictly_one_required(Path.cwd())
+            >>> RootDirOps.strictly_one_required(Path.cwd())
 
           * OK: only root-dir-op supplied:
 
-            >>> RootDirOp.strictly_one_required(root_dir_op=RootDirOp.from_path(Path('tmp')))
+            >>> RootDirOps.strictly_one_required(root_dir_op=RootDirOps.from_path(Path('tmp')))
 
           * At least one of ``root_dir`` or ``root_dir_op`` must be provided:
 
-            >>> RootDirOp.strictly_one_required(None, None)
+            >>> RootDirOps.strictly_one_required(None, None)
             Traceback (most recent call last):
             ValueError: Either root_dir or root_dir_op is required.
 
           * Both ``root_dir`` or ``root_dir_op`` cannot be provided:
 
-            >>> RootDirOp.strictly_one_required(root_dir=Path.cwd(), root_dir_op=RootDirOp.from_path(Path('tmp')))
+            >>> RootDirOps.strictly_one_required(root_dir=Path.cwd(), root_dir_op=RootDirOps.from_path(Path('tmp')))
             Traceback (most recent call last):
             ValueError: root_dir and root_dir_op are not allowed together.
 
@@ -82,18 +107,3 @@ class RootDirOp(Protocol):
         :return: a root dir operation for the supplied path.
         """
         return CWDRootDirOp(root_dir)
-
-
-class CWDRootDirOp(RootDirOp):
-    def __init__(self, root_dir=Path.cwd()):
-        """
-        Perform operations on the root_dir.
-
-        :param root_dir: the path to the root directory.
-        """
-        self._root_dir = root_dir
-
-    @override
-    @property
-    def root_dir(self) -> Path:
-        return self._root_dir
