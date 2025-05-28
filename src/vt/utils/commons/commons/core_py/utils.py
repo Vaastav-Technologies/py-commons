@@ -470,3 +470,63 @@ def fallback_on_none_strict[T](value: T | None, default_val: T) -> T:
     """
     assert default_val is not None, "default_val must not be None."
     return cast(T, fallback_on_none(value, default_val))
+
+
+def strictly_int(value: object) -> TypeGuard[int]:
+    """
+    Check if a value is strictly an integer but NOT a boolean.
+
+    This utility function is designed to distinguish between `int` and `bool` types
+    because in Python, `bool` is a subclass of `int` and would pass an `isinstance(value, int)`
+    check. This function returns `True` only if the value is a genuine integer
+    (excluding booleans).
+
+    Usage of this function is crucial in contexts where the semantic difference between
+    integers and booleans must be maintained, such as argument validation for functions
+    that accept integers but must reject boolean values.
+
+    :param value: The value to be checked.
+    :return: `True` if `value` is an `int` but not a `bool`; otherwise `False`.
+
+    :rtype: TypeGuard[int]
+
+    Examples::
+
+        >>> strictly_int(5)
+        True
+        >>> strictly_int(-10)
+        True
+        >>> strictly_int(0)
+        True
+        >>> strictly_int(True)
+        False
+        >>> strictly_int(False)
+        False
+        >>> strictly_int(5.0)
+        False
+        >>> strictly_int("5")
+        False
+        >>> strictly_int(None)
+        False
+        >>> strictly_int([1, 2, 3])
+        False
+        >>> strictly_int(object())
+        False
+
+    This function helps static type checkers like mypy to narrow types::
+
+        >>> from typing import reveal_type
+        >>> def test(x: int | bool | str) -> int:
+        ...     if strictly_int(x):
+        ...         reveal_type(x)  # Revealed type is 'int'
+        ...         return x + 1
+        ...     else:
+        ...         raise ValueError("Not strictly an int")
+        ...
+        >>> test(10)
+        11
+        >>> test(True)  # Raises ValueError
+        Traceback (most recent call last):
+        ValueError: Not strictly an int
+    """
+    return isinstance(value, int) and not isinstance(value, bool)
