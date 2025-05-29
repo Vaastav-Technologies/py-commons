@@ -532,32 +532,6 @@ def strictly_int(value: object) -> TypeGuard[int]:
     return isinstance(value, int) and not isinstance(value, bool)
 
 
-# ensure_atleast_one_arg overloads
-
-@overload
-def ensure_atleast_one_arg(
-    first: object | None,
-    *rest: object,
-    falsy: bool = ...,
-    enforce_type: type = ...
-) -> Sequence[object]: ...
-
-@overload
-def ensure_atleast_one_arg[T](
-    first: T | None,
-    *rest: T,
-    falsy: bool = ...,
-    enforce_type: None = None
-) -> Sequence[T]: ...
-
-@overload
-def ensure_atleast_one_arg(
-    first: object | None,
-    *rest: object,
-    falsy: bool = ...,
-    enforce_type: Literal[False] = False
-) -> Sequence[object]: ...
-
 def ensure_atleast_one_arg[T](
     first: T | object | None,
     *rest: T | object,
