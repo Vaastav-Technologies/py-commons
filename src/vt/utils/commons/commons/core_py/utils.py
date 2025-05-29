@@ -4,8 +4,8 @@
 """
 Reusable utilities related to core python.
 """
-from collections.abc import Callable
-from typing import Any, cast, TypeGuard
+from collections.abc import Callable, Sequence
+from typing import Any, cast, TypeGuard, overload, Literal
 from vt.utils.commons.commons.core_py.base import MISSING, Missing, UNSET, Unset
 
 
@@ -530,3 +530,86 @@ def strictly_int(value: object) -> TypeGuard[int]:
         ValueError: Not strictly an int
     """
     return isinstance(value, int) and not isinstance(value, bool)
+
+
+@overload
+def ensure_atleast_one_arg(
+    first: object | None,
+    *rest: object,
+    falsy: bool = ...,
+    enforce_type: type = ...,
+    type_check: Literal[True] = True
+) -> Sequence[object]: ...
+
+@overload
+def ensure_atleast_one_arg(
+    first: object | None,
+    *rest: object,
+    falsy: bool = ...,
+    enforce_type: None = None,
+    type_check: Literal[False]
+) -> Sequence[object]: ...
+
+def ensure_atleast_one_arg(
+    first: object | None,
+    *rest: object,
+    falsy: bool = False,
+    enforce_type: type | None = None,
+    type_check: bool = True,
+) -> Sequence[object]:
+    """
+    Ensures that at least one argument is provided (truthy or non-None),
+    with optional type enforcement or inference.
+
+    :param first: First argument (can be None).
+    :param rest: Additional arguments.
+    :param falsy: Whether to treat falsy values as invalid.
+    :param enforce_type: A specific type to enforce across all arguments.
+    :param type_check: Whether to check type consistency at all.
+
+    :returns: A tuple of valid arguments.
+
+    :raises ValueError: If no valid argument is provided.
+    :raises TypeError: If enforce_type is given but a mismatch is found.
+
+
+    Examples::
+
+    >>> ensure_atleast_one_arg("foo", None)
+    ('foo',)
+
+    >>> ensure_atleast_one_arg("foo", "bar", enforce_type=str)
+    ('foo', 'bar')
+
+    >>> ensure_atleast_one_arg(1, "a", enforce_type=int)
+    Traceback (most recent call last):
+    TypeError: Expected all arguments to be of type int.
+
+    >>> ensure_atleast_one_arg(1, "a", type_check=True)
+    Traceback (most recent call last):
+    TypeError: Expected all arguments to be of type int.
+
+    >>> ensure_atleast_one_arg(1, "a", type_check=False)
+    (1, 'a')
+
+    >>> ensure_atleast_one_arg(None, [], {}, falsy=True)
+    Traceback (most recent call last):
+    ValueError: At least one argument is required.
+    """
+    args = (first,) + rest
+
+    if falsy:
+        values = tuple(arg for arg in args if arg)
+    else:
+        values = tuple(arg for arg in args if arg is not None)
+
+    if not values:
+        raise ValueError("At least one argument is required.")
+
+    if type_check:
+        expected_type = enforce_type or type(values[0])
+        for v in values:
+            if not isinstance(v, expected_type):
+                raise TypeError(f"Expected all arguments to be of type {expected_type.__name__}.")
+
+    return values
