@@ -24,6 +24,7 @@ class ReversibleOp(Protocol):
         ...
 
 
+# region Root dir related operations
 class RootDirOp(Protocol):
     """
     Perform operations on the ``root_dir``.
@@ -107,3 +108,4 @@ class RootDirOps:
         :return: a root dir operation for the supplied path.
         """
         return CWDRootDirOp(root_dir)
+# endregion
