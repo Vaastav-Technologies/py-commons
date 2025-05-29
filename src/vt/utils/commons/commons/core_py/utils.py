@@ -6,6 +6,7 @@ Reusable utilities related to core python.
 """
 from collections.abc import Callable, Sequence
 from typing import Any, cast, TypeGuard, overload, Literal
+
 from vt.utils.commons.commons.core_py.base import MISSING, Missing, UNSET, Unset
 
 
@@ -531,6 +532,31 @@ def strictly_int(value: object) -> TypeGuard[int]:
     """
     return isinstance(value, int) and not isinstance(value, bool)
 
+# ensure_atleast_one_arg() and overloads
+
+@overload
+def ensure_atleast_one_arg[T](
+    first: T | None,
+    *rest: T,
+    falsy: bool = False,
+    enforce_type: None = None
+) -> Sequence[T]: ...
+
+@overload
+def ensure_atleast_one_arg[T](
+    first: object | None,
+    *rest: object,
+    falsy: bool = False,
+    enforce_type: Literal[False] = False
+) -> Sequence[object]: ...
+
+@overload
+def ensure_atleast_one_arg[T](
+    first: T | None,
+    *rest: T,
+    falsy: bool = False,
+    enforce_type: type[T]
+) -> Sequence[T]: ...
 
 def ensure_atleast_one_arg[T](
     first: T | object | None,
@@ -572,7 +598,7 @@ def ensure_atleast_one_arg[T](
     >>> ensure_atleast_one_arg("foo", "bar", enforce_type=str)
     ('foo', 'bar')
 
-    >>> ensure_atleast_one_arg(1, "a", enforce_type=int)
+    >>> ensure_atleast_one_arg(1, "a", enforce_type=int) # type: ignore[arg-type] # expected int, provided str.
     Traceback (most recent call last):
     TypeError: Expected all arguments to be of type int.
 
