@@ -532,40 +532,57 @@ def strictly_int(value: object) -> TypeGuard[int]:
     return isinstance(value, int) and not isinstance(value, bool)
 
 
-@overload
-def ensure_atleast_one_arg(
-    first: object | None,
-    *rest: object,
-    falsy: bool = ...,
-    enforce_type: type = ...,
-    type_check: Literal[True] = True
-) -> Sequence[object]: ...
+# ensure_atleast_one_arg overloads
 
 @overload
 def ensure_atleast_one_arg(
     first: object | None,
     *rest: object,
     falsy: bool = ...,
-    enforce_type: None = None,
-    type_check: Literal[False]
+    enforce_type: type = ...
 ) -> Sequence[object]: ...
 
+@overload
+def ensure_atleast_one_arg[T](
+    first: T | None,
+    *rest: T,
+    falsy: bool = ...,
+    enforce_type: None = None
+) -> Sequence[T]: ...
+
+@overload
 def ensure_atleast_one_arg(
     first: object | None,
     *rest: object,
+    falsy: bool = ...,
+    enforce_type: Literal[False] = False
+) -> Sequence[object]: ...
+
+def ensure_atleast_one_arg[T](
+    first: T | object | None,
+    *rest: T | object,
     falsy: bool = False,
-    enforce_type: type | None = None,
-    type_check: bool = True,
-) -> Sequence[object]:
+    enforce_type: type | Literal[False] | None = None
+) -> Sequence[T] | Sequence[object]:
     """
     Ensures that at least one argument is provided (truthy or non-None),
     with optional type enforcement or inference.
+
+
+    ``enforce_type`` behavior:
+
+      * if not provided, defaults to ``None``. This defaults the method to type check all the arguments to have the same
+        type as the first valid argument. Invalidating this condition raises a ``TypeError``.
+
+      * if ``False`` then, no type-enforcement is performed.
+
+      * if a type is provided, like ``str``, ``int`` etc. then all the arguments are enforce to have this same type.
+        Invalidating this condition raises a ``TypeError``.
 
     :param first: First argument (can be None).
     :param rest: Additional arguments.
     :param falsy: Whether to treat falsy values as invalid.
     :param enforce_type: A specific type to enforce across all arguments.
-    :param type_check: Whether to check type consistency at all.
 
     :returns: A tuple of valid arguments.
 
@@ -585,16 +602,41 @@ def ensure_atleast_one_arg(
     Traceback (most recent call last):
     TypeError: Expected all arguments to be of type int.
 
-    >>> ensure_atleast_one_arg(1, "a", type_check=True)
+    >>> ensure_atleast_one_arg(1, "a")
     Traceback (most recent call last):
     TypeError: Expected all arguments to be of type int.
 
-    >>> ensure_atleast_one_arg(1, "a", type_check=False)
+    >>> ensure_atleast_one_arg(1, "a", enforce_type=False)
     (1, 'a')
 
     >>> ensure_atleast_one_arg(None, [], {}, falsy=True)
     Traceback (most recent call last):
     ValueError: At least one argument is required.
+
+    >>> ensure_atleast_one_arg(None, 0, "", enforce_type=False, falsy=True)
+    Traceback (most recent call last):
+    ValueError: At least one argument is required.
+
+    >>> ensure_atleast_one_arg(None, "hi", 2.3, enforce_type=False)
+    ('hi', 2.3)
+
+    >>> ensure_atleast_one_arg(None, "hi", 2.3)
+    Traceback (most recent call last):
+    TypeError: Expected all arguments to be of type str.
+
+    >>> ensure_atleast_one_arg(None, 123, enforce_type=int)
+    (123,)
+
+    >>> ensure_atleast_one_arg(None, 123, enforce_type=str)
+    Traceback (most recent call last):
+    TypeError: Expected all arguments to be of type str.
+
+    >>> ensure_atleast_one_arg("hi", None, 3.0, falsy=True)
+    Traceback (most recent call last):
+    TypeError: Expected all arguments to be of type str.
+
+    >>> ensure_atleast_one_arg(None, 'null', 3.0, None, set(), enforce_type=False)
+    ('null', 3.0, set())
     """
     args = (first,) + rest
 
@@ -606,7 +648,7 @@ def ensure_atleast_one_arg(
     if not values:
         raise ValueError("At least one argument is required.")
 
-    if type_check:
+    if enforce_type is not False:
         expected_type = enforce_type or type(values[0])
         for v in values:
             if not isinstance(v, expected_type):
