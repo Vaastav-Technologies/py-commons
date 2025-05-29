@@ -408,7 +408,7 @@ def alt_if_ellipses[T](obj, alt: T) -> T:
     return _alt_if_predicate_true(obj, alt, is_ellipses)
 
 
-def fallback_on_none[T](value:T | None, default_val: T | None) -> T | None:
+def fallback_on_none[T](value: T | None, default_val: T | None) -> T | None:
     """
     Get ``value`` if it is non-``None`` else get ``default_val``.
 
@@ -532,37 +532,43 @@ def strictly_int(value: object) -> TypeGuard[int]:
     """
     return isinstance(value, int) and not isinstance(value, bool)
 
+
+# region positional args related utility methods
+
 # region ensure_atleast_one_arg() and overloads
 
 @overload
 def ensure_atleast_one_arg[T](
-    first: T | None,
-    *rest: T,
-    falsy: bool = False,
-    enforce_type: None = None
+        first: T | None,
+        *rest: T,
+        falsy: bool = False,
+        enforce_type: None = None
 ) -> Sequence[T]: ...
+
 
 @overload
 def ensure_atleast_one_arg[T](
-    first: object | None,
-    *rest: object,
-    falsy: bool = False,
-    enforce_type: Literal[False] = False
+        first: object | None,
+        *rest: object,
+        falsy: bool = False,
+        enforce_type: Literal[False] = False
 ) -> Sequence[object]: ...
 
+
 @overload
 def ensure_atleast_one_arg[T](
-    first: T | None,
-    *rest: T,
-    falsy: bool = False,
-    enforce_type: type[T]
+        first: T | None,
+        *rest: T,
+        falsy: bool = False,
+        enforce_type: type[T]
 ) -> Sequence[T]: ...
 
+
 def ensure_atleast_one_arg[T](
-    first: T | object | None,
-    *rest: T | object,
-    falsy: bool = False,
-    enforce_type: type | Literal[False] | None = None
+        first: T | object | None,
+        *rest: T | object,
+        falsy: bool = False,
+        enforce_type: type | Literal[False] | None = None
 ) -> Sequence[T] | Sequence[object]:
     """
     Ensures that at least one argument is provided (truthy or non-None),
@@ -638,12 +644,7 @@ def ensure_atleast_one_arg[T](
     >>> ensure_atleast_one_arg(None, 'null', 3.0, None, set(), enforce_type=False)
     ('null', 3.0, set())
     """
-    args = (first,) + rest
-
-    if falsy:
-        values = tuple(arg for arg in args if arg)
-    else:
-        values = tuple(arg for arg in args if arg is not None)
+    values = _filter_args(first, *rest, falsy=falsy)
 
     if not values:
         raise ValueError("At least one argument is required.")
@@ -655,5 +656,166 @@ def ensure_atleast_one_arg[T](
                 raise TypeError(f"Expected all arguments to be of type {expected_type.__name__}.")
 
     return values
+
+
+# endregion
+
+# region has_atleast_one_arg() and overloads
+@overload
+def has_atleast_one_arg[T](
+        first: T | None,
+        *rest: T,
+        falsy: bool = False,
+        enforce_type: None = None
+) -> bool:
+    """
+    A ``has_atleast_one_arg()`` overload.
+
+    ``first`` and ``rest`` all args must be of the same type when ``enforce_type`` is not provided or is ``None``.
+    """
+    ...
+
+@overload
+def has_atleast_one_arg(
+        first: object | None,
+        *rest: object,
+        falsy: bool = False,
+        enforce_type: Literal[False] = False
+) -> bool:
+    """
+    A ``has_atleast_one_arg()`` overload.
+
+    ``first`` and ``rest`` all args can be of any type when ``enforce_type=False``.
+    """
+    ...
+
+@overload
+def has_atleast_one_arg[T](
+        first: T | None,
+        *rest: T,
+        falsy: bool = False,
+        enforce_type: type[T]
+) -> bool:
+    """
+    A ``has_atleast_one_arg()`` overload.
+
+    ``first`` and ``rest`` all args must be of the type provided as ``enforce_type``.
+
+    For example, ``first`` and ``rest`` all args must be ``int`` when ``enforce_type=int``.
+    """
+    ...
+
+def has_atleast_one_arg(
+        first: object | None,
+        *rest: object,
+        falsy: bool = False,
+        enforce_type: type | Literal[False] | None = None
+) -> bool:
+    """
+    Returns True if there is at least one valid (non-None or truthy) argument,
+    optionally enforcing all values are of the same type.
+
+    :param first: First argument (can be None).
+    :param rest: Additional arguments.
+    :param falsy: Whether to treat falsy values as invalid.
+    :param enforce_type: Type to enforce across all arguments.
+    :returns: True if valid arguments are found and type checks pass.
+
+    >>> has_atleast_one_arg(None, [])
+    True
+
+    >>> has_atleast_one_arg(None, [], falsy=True)
+    False
+
+    >>> has_atleast_one_arg("a", "b", enforce_type=str)
+    True
+
+    >>> has_atleast_one_arg("a", 1, enforce_type=str) # type: ignore[arg-type] # expected str, provided int.
+    False
+
+    >>> has_atleast_one_arg("foo")
+    True
+
+    >>> has_atleast_one_arg(None, "bar")
+    True
+
+    >>> has_atleast_one_arg(None, None)
+    False
+
+    >>> has_atleast_one_arg("", [], 0)
+    False
+
+    >>> has_atleast_one_arg("", [], 0, enforce_type=False)
+    True
+
+    >>> has_atleast_one_arg("", [], 0, falsy=True)
+    False
+
+    >>> has_atleast_one_arg(1, 2, 3, enforce_type=int)
+    True
+
+    >>> has_atleast_one_arg(1, "2", enforce_type=int) # type: ignore[arg-type] # expected int, provided str.
+    False
+
+    >>> has_atleast_one_arg(1, "2", enforce_type=False)
+    True
+
+    >>> has_atleast_one_arg(None, 2.0, enforce_type=int)
+    False
+
+    >>> has_atleast_one_arg(None, 2.0, enforce_type=float)
+    True
+
+    >>> has_atleast_one_arg(None, "", 0, False, enforce_type=False, falsy=True)
+    False
+
+    >>> has_atleast_one_arg("abc", 123)
+    False
+
+    >>> has_atleast_one_arg("abc", 123, enforce_type=False)
+    True
+
+    >>> has_atleast_one_arg("abc", 123, enforce_type=str) # type: ignore[arg-type] # expected str, provided int.
+    False
+
+    >>> has_atleast_one_arg(None, None, None, falsy=True)
+    False
+
+    >>> has_atleast_one_arg("a", None, falsy=True)
+    True
+
+    >>> has_atleast_one_arg("a", None, enforce_type=str) # type: ignore[arg-type] # expected str, provided None.
+    True
+
+    >>> has_atleast_one_arg(None, [1, 2, 3], enforce_type=list)
+    True
+
+    >>> has_atleast_one_arg(None, [1, 2, 3], enforce_type=dict)
+    False
+    """
+    return bool(_collect_valid_args(first, *rest, falsy=falsy, enforce_type=enforce_type))
+
+# endregion
+
+# region Internal utility functions to handle positional variadic args.
+def _filter_args(first, *rest, falsy):
+    args = (first, *rest)
+    if falsy:
+        return tuple(arg for arg in args if arg)
+    else:
+        return tuple(arg for arg in args if arg is not None)
+
+
+def _collect_valid_args(first, *rest, falsy, enforce_type):
+    values = _filter_args(first, *rest, falsy=falsy)
+    if enforce_type is False:
+        return values
+
+    if values:
+        expected_type = enforce_type or type(values[0])
+        if all(isinstance(v, expected_type) for v in values):
+            return values
+    return ()
+# endregion
 
 # endregion
