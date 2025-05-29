@@ -33,7 +33,7 @@ class RootDirOp(Protocol):
     @abstractmethod
     def root_dir(self) -> Path:
         """
-        :return: Path to the ``root_dir`` root directory for thi operation.
+        :return: Path to the ``root_dir`` root directory for this operation.
         """
         ...
 
