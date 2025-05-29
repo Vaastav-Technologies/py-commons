@@ -532,7 +532,7 @@ def strictly_int(value: object) -> TypeGuard[int]:
     """
     return isinstance(value, int) and not isinstance(value, bool)
 
-# ensure_atleast_one_arg() and overloads
+# region ensure_atleast_one_arg() and overloads
 
 @overload
 def ensure_atleast_one_arg[T](
@@ -655,3 +655,5 @@ def ensure_atleast_one_arg[T](
                 raise TypeError(f"Expected all arguments to be of type {expected_type.__name__}.")
 
     return values
+
+# endregion
