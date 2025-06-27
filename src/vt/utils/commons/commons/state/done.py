@@ -8,7 +8,7 @@ marking and enquiring ``done`` state.
 
 from abc import abstractmethod
 from collections.abc import Sequence
-from typing import Protocol, override, Any
+from typing import Protocol, override
 
 from vt.utils.commons.commons.collections import get_first_true, get_last_true
 
@@ -56,7 +56,7 @@ class DoneEnquirer[T](Protocol):
         Examples:
 
           * Doctest setup:
-
+            >>> from typing import Any
             >>> class AlwaysDone(DoneEnquirer[Any]):
             ...     def __init__(self, marking: bool):
             ...         self.marking = marking
@@ -89,6 +89,7 @@ class DoneEnquirer[T](Protocol):
 
           * Doctest setup:
 
+            >>> from typing import Any
             >>> class AlwaysDone(DoneEnquirer[Any]):
             ...     def __init__(self, marking: bool):
             ...         self.marking = marking
