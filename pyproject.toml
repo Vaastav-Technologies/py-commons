@@ -59,7 +59,6 @@ doc = ["sphinx", "sphinx-argparse"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-exclude = ["*.py"]
 namespaces = true
 
 [tool.tox]
