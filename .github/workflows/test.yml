@@ -39,4 +39,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
+          slug: Vaastav-Technologies/py-commons
           verbose: true
