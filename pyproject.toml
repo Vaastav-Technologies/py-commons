@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"  # If not defined, then legacy behavior 
 name = "vt-commons"
 version = "0.0.0"
 description = "Reusable common utilities, interfaces and implementations for python projects."
-readme = "README"
+readme = "README.md"
 authors = [
     {name = "Suhas Krishna Srivastava", email = "suhas.srivastava@vaastav.tech"}
 ]
