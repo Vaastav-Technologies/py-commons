@@ -199,7 +199,7 @@ def _alt_if_predicate_true[T, U](obj: Any | U, alt: T, predicate: Callable[[Any 
     """
     if predicate(obj):
         return alt
-    if type(obj) != type(alt):
+    if type(obj) is not type(alt):
         raise TypeError(f"Unexpected type: `obj` and `alt` must be of the same type. type(obj): {type(obj)}, "
                         f"type(alt): {type(alt)}")
     return alt if is_missing(obj) else cast(T, obj)
