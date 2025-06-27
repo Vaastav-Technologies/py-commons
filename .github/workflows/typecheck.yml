@@ -24,6 +24,6 @@ jobs:
           pip install mypy
 
       - name: 🧠 Run Mypy (Static Type Check)
-        run: mypy -p vt.utils.commons.commons --namespace-packages
+        run: mypy -p vt.utils.commons.commons
         env:
           PYTHONPATH: .
