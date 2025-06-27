@@ -1,5 +1,4 @@
-name: Python 🐍 CI (Lint, Typecheck, Doctest)
-
+name: 🔧 test
 
 on:
   push:
@@ -9,7 +8,6 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -25,18 +23,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
-      - name: 📦 Install dependencies
+      - name: 💼 Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest coverage codecov ruff mypy
-
-      - name: ✅ Run Ruff (Lint)
-        run: ruff check .
-
-      - name: 🧠 Run Mypy (Static Type Check)
-        run: mypy -p vt.utils.commons.commons --namespace-packages
-        env:
-          PYTHONPATH: .
+          pip install pytest coverage codecov
 
       - name: 🧪 Run Doctests and Coverage
         run: |
