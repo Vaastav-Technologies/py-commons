@@ -1,4 +1,4 @@
-name: 📦 check-manifest
+name: 📦 check-manifest 
 
 on:
   push:
