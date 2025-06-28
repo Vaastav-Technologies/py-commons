@@ -46,7 +46,7 @@ license-files = ["LICENSE"]
 [dependency-groups]
 dev = ["mypy", "ruff", "check-manifest"]
 doc = ['sphinx', 'sphinx-argparse']
-test = ['pytest', 'coverage']
+test = ['pytest', 'pytest-cov']
 multitest = ['tox']
 
 [tool.setuptools.packages.find]

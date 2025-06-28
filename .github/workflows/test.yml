@@ -26,17 +26,15 @@ jobs:
       - name: 💼 Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest coverage codecov
+          pip install pytest pytest-cov
 
       - name: 🧪 Run Doctests and Coverage
         run: |
           python -m pip install .
-          coverage run -m pytest --doctest-modules .
-          coverage xml
+          pytest --cov --cov-branch --cov-report=xml --doctest-modules .
 
       - name: 📈 Upload to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.xml
           verbose: true
