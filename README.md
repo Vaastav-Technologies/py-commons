@@ -9,6 +9,8 @@
 ---
 Commons methods, utils, interfaces and implementations for python projects.
 
+#### check for OS
+
 ### Install
 
 ```shell
