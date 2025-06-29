@@ -46,6 +46,8 @@ jobs:
     name: 📊 Publish to TestPyPI
     runs-on: ubuntu-latest
     needs: release-build
+    permissions:
+      id-token: write
 
     steps:
       - name: 📥 Download release artifacts
