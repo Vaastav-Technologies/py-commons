@@ -65,6 +65,7 @@ jobs:
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          TWINE_VERBOSE: 1
 
   pypi-publish:
     name: 📦 Publish to PyPI
