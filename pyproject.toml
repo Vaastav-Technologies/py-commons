@@ -41,7 +41,6 @@ classifiers = [
   "Typing :: Typed"
 ]
 license = "Apache-2.0"
-license-files = ["LICENSE"]
 
 [dependency-groups]
 dev = ["mypy", "ruff", "check-manifest"]
