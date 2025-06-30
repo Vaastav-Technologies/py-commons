@@ -9,6 +9,12 @@
 ---
 Commons methods, utils, interfaces and implementations for python projects.
 
+### Install
+
+```shell
+pip install vt-commons
+```
+
 #### Usage examples
 
 - Check for OS
@@ -69,11 +75,7 @@ Commons methods, utils, interfaces and implementations for python projects.
     assert 3 == get_first_true([1, 3, 5, 7, 2, 1], 8, lambda x: x>2)
     ```
     Check in `vt.utils.commons.commons.collections` and documentation for more functions and utilities related to collection management.
-### Install
 
-```shell
-pip install vt-commons
-```
 
 ### Contribute
 
