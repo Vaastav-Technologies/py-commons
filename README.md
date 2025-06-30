@@ -16,3 +16,9 @@ Commons methods, utils, interfaces and implementations for python projects.
 ```shell
 pip install vt-commons
 ```
+
+### Contribute
+
+Want to contribute?
+
+Checkout [Guidelines for contributions](CONTRIBUTING.md).
