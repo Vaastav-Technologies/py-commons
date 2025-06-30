@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"  # If not defined, then legacy behavior 
 
 [project]
 name = "vt-commons"
-version = "0.0.0dev2"
+version = "0.0.1"
 description = "Reusable common utilities, interfaces and implementations for python projects."
 readme = "README.md"
 authors = [
