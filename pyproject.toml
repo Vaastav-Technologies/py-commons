@@ -42,6 +42,12 @@ classifiers = [
 ]
 license = "Apache-2.0"
 
+[project.urls]
+homepage = "https://github.com/Vaastav-Technologies/py-commons"
+source = "https://github.com/Vaastav-Technologies/py-commons"
+issues = "https://github.com/Vaastav-Technologies/py-commons/issues"
+
+
 [dependency-groups]
 dev = ["mypy", "ruff", "check-manifest"]
 doc = ['sphinx', 'sphinx-argparse']
