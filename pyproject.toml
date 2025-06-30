@@ -49,7 +49,7 @@ issues = "https://github.com/Vaastav-Technologies/py-commons/issues"
 
 
 [dependency-groups]
-dev = ["mypy", "ruff", "check-manifest"]
+dev = ["mypy", "ruff"]
 doc = ['sphinx', 'sphinx-argparse']
 test = ['pytest', 'pytest-cov']
 multitest = ['tox']

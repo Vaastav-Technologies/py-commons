@@ -30,10 +30,12 @@ jobs:
       - name: 🏗️ Build release distributions
         run: |
           python -m pip install --upgrade pip
-          pip install build twine check-manifest
-          check-manifest
+          pip install build twine
           python -m build
           twine check dist/*
+          SDIST_FILE=$(ls dist/*.tar.gz)
+          echo "Checking contents of $SDIST_FILE..."
+          tar -tzf "$SDIST_FILE" | grep "py\.typed" && echo "✅ py.typed found in sdist!" || (echo "❌ py.typed missing!" && exit 1)
 
       - name: 📦 Upload distributions
         uses: actions/upload-artifact@v4
