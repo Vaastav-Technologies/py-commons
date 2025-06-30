@@ -9,4 +9,3 @@ from vt.utils.commons.commons.op.base import RootDirOp as RootDirOp
 from vt.utils.commons.commons.op.base import CWDRootDirOp as CWDRootDirOp
 from vt.utils.commons.commons.op.base import RootDirOps as RootDirOps
 from vt.utils.commons.commons.op.base import ReversibleOp as ReversibleOp
-

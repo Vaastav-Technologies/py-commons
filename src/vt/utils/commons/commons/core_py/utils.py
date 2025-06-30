@@ -4,6 +4,7 @@
 """
 Reusable utilities related to core python.
 """
+
 from collections.abc import Callable, Sequence
 from typing import Any, cast, TypeGuard, overload, Literal
 
@@ -184,7 +185,9 @@ def not_none_not_missing[T](val: T | None | Missing) -> TypeGuard[T]:
     return not_none_not_sentinel(val, sentinel=MISSING)
 
 
-def _alt_if_predicate_true[T, U](obj: Any | U, alt: T, predicate: Callable[[Any | U], bool]) -> T:
+def _alt_if_predicate_true[T, U](
+    obj: Any | U, alt: T, predicate: Callable[[Any | U], bool]
+) -> T:
     """
     Get an alternate object ``alt`` if the queried object ``obj`` is ``MISSING``, i.e. it is not supplied by the caller.
 
@@ -200,8 +203,10 @@ def _alt_if_predicate_true[T, U](obj: Any | U, alt: T, predicate: Callable[[Any 
     if predicate(obj):
         return alt
     if type(obj) is not type(alt):
-        raise TypeError(f"Unexpected type: `obj` and `alt` must be of the same type. type(obj): {type(obj)}, "
-                        f"type(alt): {type(alt)}")
+        raise TypeError(
+            f"Unexpected type: `obj` and `alt` must be of the same type. type(obj): {type(obj)}, "
+            f"type(alt): {type(alt)}"
+        )
     return alt if is_missing(obj) else cast(T, obj)
 
 
@@ -537,38 +542,33 @@ def strictly_int(value: object) -> TypeGuard[int]:
 
 # region ensure_atleast_one_arg() and overloads
 
+
 @overload
 def ensure_atleast_one_arg[T](
-        first: T | None,
-        *rest: T,
-        falsy: bool = False,
-        enforce_type: None = None
+    first: T | None, *rest: T, falsy: bool = False, enforce_type: None = None
 ) -> Sequence[T]: ...
 
 
 @overload
 def ensure_atleast_one_arg[T](
-        first: object | None,
-        *rest: object,
-        falsy: bool = False,
-        enforce_type: Literal[False] = False
+    first: object | None,
+    *rest: object,
+    falsy: bool = False,
+    enforce_type: Literal[False] = False,
 ) -> Sequence[object]: ...
 
 
 @overload
 def ensure_atleast_one_arg[T](
-        first: T | None,
-        *rest: T,
-        falsy: bool = False,
-        enforce_type: type[T]
+    first: T | None, *rest: T, falsy: bool = False, enforce_type: type[T]
 ) -> Sequence[T]: ...
 
 
 def ensure_atleast_one_arg[T](
-        first: T | object | None,
-        *rest: T | object,
-        falsy: bool = False,
-        enforce_type: type | Literal[False] | None = None
+    first: T | object | None,
+    *rest: T | object,
+    falsy: bool = False,
+    enforce_type: type | Literal[False] | None = None,
 ) -> Sequence[T] | Sequence[object]:
     """
     Ensures that at least one argument is provided (truthy or non-None),
@@ -653,20 +653,20 @@ def ensure_atleast_one_arg[T](
         expected_type = enforce_type or type(values[0])
         for v in values:
             if not isinstance(v, expected_type):
-                raise TypeError(f"Expected all arguments to be of type {expected_type.__name__}.")
+                raise TypeError(
+                    f"Expected all arguments to be of type {expected_type.__name__}."
+                )
 
     return values
 
 
 # endregion
 
+
 # region has_atleast_one_arg() and overloads
 @overload
 def has_atleast_one_arg[T](
-        first: T | None,
-        *rest: T,
-        falsy: bool = False,
-        enforce_type: None = None
+    first: T | None, *rest: T, falsy: bool = False, enforce_type: None = None
 ) -> bool:
     """
     A ``has_atleast_one_arg()`` overload.
@@ -675,12 +675,13 @@ def has_atleast_one_arg[T](
     """
     ...
 
+
 @overload
 def has_atleast_one_arg(
-        first: object | None,
-        *rest: object,
-        falsy: bool = False,
-        enforce_type: Literal[False] = False
+    first: object | None,
+    *rest: object,
+    falsy: bool = False,
+    enforce_type: Literal[False] = False,
 ) -> bool:
     """
     A ``has_atleast_one_arg()`` overload.
@@ -689,12 +690,10 @@ def has_atleast_one_arg(
     """
     ...
 
+
 @overload
 def has_atleast_one_arg[T](
-        first: T | None,
-        *rest: T,
-        falsy: bool = False,
-        enforce_type: type[T]
+    first: T | None, *rest: T, falsy: bool = False, enforce_type: type[T]
 ) -> bool:
     """
     A ``has_atleast_one_arg()`` overload.
@@ -705,11 +704,12 @@ def has_atleast_one_arg[T](
     """
     ...
 
+
 def has_atleast_one_arg(
-        first: object | None,
-        *rest: object,
-        falsy: bool = False,
-        enforce_type: type | Literal[False] | None = None
+    first: object | None,
+    *rest: object,
+    falsy: bool = False,
+    enforce_type: type | Literal[False] | None = None,
 ) -> bool:
     """
     Returns True if there is at least one valid (non-None or truthy) argument,
@@ -793,9 +793,13 @@ def has_atleast_one_arg(
     >>> has_atleast_one_arg(None, [1, 2, 3], enforce_type=dict)
     False
     """
-    return bool(_collect_valid_args(first, *rest, falsy=falsy, enforce_type=enforce_type))
+    return bool(
+        _collect_valid_args(first, *rest, falsy=falsy, enforce_type=enforce_type)
+    )
+
 
 # endregion
+
 
 # region Internal utility functions to handle positional variadic args.
 def _filter_args(first, *rest, falsy):
@@ -816,6 +820,8 @@ def _collect_valid_args(first, *rest, falsy, enforce_type):
         if all(isinstance(v, expected_type) for v in values):
             return values
     return ()
+
+
 # endregion
 
 # endregion

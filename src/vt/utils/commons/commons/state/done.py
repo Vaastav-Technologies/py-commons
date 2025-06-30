@@ -122,6 +122,7 @@ class DoneVisitor[T](DoneMarker[T], DoneEnquirer[T], Protocol):
     * Marking the operation as done. Supplied by ``DoneMarker``.
     * Checking whether an operation is marked as done. Supplied by ``DoneEnquirer``.
     """
+
     pass
 
 

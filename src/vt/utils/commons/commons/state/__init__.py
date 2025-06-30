@@ -8,5 +8,6 @@ Reusable common utilities, interfaces and implementations for python projects re
 from vt.utils.commons.commons.state.done import DoneEnquirer as DoneEnquirer
 from vt.utils.commons.commons.state.done import DoneMarker as DoneMarker
 from vt.utils.commons.commons.state.done import DoneVisitor as DoneVisitor
-from vt.utils.commons.commons.state.done import DelegatingDoneVisitor as DelegatingDoneVisitor
-
+from vt.utils.commons.commons.state.done import (
+    DelegatingDoneVisitor as DelegatingDoneVisitor,
+)

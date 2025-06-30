@@ -8,9 +8,12 @@ Reusable common utilities for python projects related to collections.
 from collections.abc import Sequence, Callable, Iterator
 
 
-def get_first_true[T](ids: Sequence[T], default_val: T,
-                      predicate: Callable[[T], bool],
-                      iter_provider: Callable[[Sequence[T]], Iterator[T]] = iter) -> T:
+def get_first_true[T](
+    ids: Sequence[T],
+    default_val: T,
+    predicate: Callable[[T], bool],
+    iter_provider: Callable[[Sequence[T]], Iterator[T]] = iter,
+) -> T:
     """
     Get the first id which returns ``True`` from the supplied ``predicate`` else get the ``default_val``.
 
@@ -52,7 +55,9 @@ def get_first_true[T](ids: Sequence[T], default_val: T,
         the ``predicate`` returns ``True`` for no id(s).
     """
     if not callable(predicate):
-        raise TypeError(f"predicate must be a (x) -> bool Callable. Supplied {type(predicate)}.")
+        raise TypeError(
+            f"predicate must be a (x) -> bool Callable. Supplied {type(predicate)}."
+        )
 
     for _id in iter_provider(ids):
         if predicate(_id):
@@ -60,8 +65,9 @@ def get_first_true[T](ids: Sequence[T], default_val: T,
     return default_val
 
 
-def get_last_true[T](ids: Sequence[T], default_val: T,
-                     predicate: Callable[[T], bool]) -> T:
+def get_last_true[T](
+    ids: Sequence[T], default_val: T, predicate: Callable[[T], bool]
+) -> T:
     """
     Get the last id which returns ``True`` from the supplied ``predicate`` else get the ``default_val``.
 

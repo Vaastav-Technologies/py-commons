@@ -4,6 +4,7 @@
 """
 Reusable interfaces for python projects related to operations.
 """
+
 from __future__ import annotations
 from abc import abstractmethod
 from pathlib import Path
@@ -61,8 +62,13 @@ class RootDirOps:
     """
 
     @staticmethod
-    def strictly_one_required(root_dir: Path | None = None, root_dir_op: RootDirOp | None = None, *,
-                              root_dir_str: str = 'root_dir', root_dir_op_str: str = 'root_dir_op'):
+    def strictly_one_required(
+        root_dir: Path | None = None,
+        root_dir_op: RootDirOp | None = None,
+        *,
+        root_dir_str: str = "root_dir",
+        root_dir_op_str: str = "root_dir_op",
+    ):
         """
         Convenience method to raise ``ValueError`` when both ``root_dir`` and ``root_dir_op`` are supplied.
 
@@ -99,7 +105,9 @@ class RootDirOps:
         if root_dir is None and root_dir_op is None:
             raise ValueError(f"Either {root_dir_str} or {root_dir_op_str} is required.")
         if root_dir and root_dir_op:
-            raise ValueError(f"{root_dir_str} and {root_dir_op_str} are not allowed together.")
+            raise ValueError(
+                f"{root_dir_str} and {root_dir_op_str} are not allowed together."
+            )
 
     @staticmethod
     def from_path(root_dir: Path = Path.cwd()) -> CWDRootDirOp:
@@ -108,4 +116,6 @@ class RootDirOps:
         :return: a root dir operation for the supplied path.
         """
         return CWDRootDirOp(root_dir)
+
+
 # endregion
