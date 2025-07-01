@@ -7,6 +7,7 @@
 [![🛠️ lint](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/lint.yml/badge.svg)](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/lint.yml)
 [![📊 coverage](https://codecov.io/gh/Vaastav-Technologies/py-commons/branch/main/graph/badge.svg)](https://codecov.io/gh/Vaastav-Technologies/py-commons)
 [![📤 Upload Python Package](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/python-publish.yml)
+![PyPI - Version](https://img.shields.io/pypi/v/vt-commons)
 
 ---
 A fully typed library for commons methods, utils, interfaces and implementations for python projects.
