@@ -7,7 +7,7 @@
 [![📤 Upload Python Package](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/python-publish.yml)
 
 ---
-Commons methods, utils, interfaces and implementations for python projects.
+A fully typed library for commons methods, utils, interfaces and implementations for python projects.
 
 ### Install
 
