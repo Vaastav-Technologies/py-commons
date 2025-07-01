@@ -64,9 +64,6 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: dist/
 #          verbose: true
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
 
   pypi-publish:
     name: 📦 Publish to PyPI
