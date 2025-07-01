@@ -1,5 +1,6 @@
 # vt-commons
 
+![PyPI - Types](https://img.shields.io/pypi/types/vt-commons)
 ![GitHub License](https://img.shields.io/github/license/Vaastav-Technologies/py-commons)
 [![🔧 test](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/test.yml/badge.svg)](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/test.yml)
 [![💡 typecheck](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/typecheck.yml/badge.svg)](https://github.com/Vaastav-Technologies/py-commons/actions/workflows/typecheck.yml)
