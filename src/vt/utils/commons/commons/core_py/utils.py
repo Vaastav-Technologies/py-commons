@@ -558,6 +558,8 @@ def ensure_atleast_one_arg[T](
 ) -> Sequence[object]: ...
 
 
+# TODO: check if a Union of types can be enforced in enforce_type. Like, Union[str, Path] or direct `str | Path`
+#   or maybe check if an enforce_types list can be added.
 @overload
 def ensure_atleast_one_arg[T](
     first: T | None, *rest: T, falsy: bool = False, enforce_type: type[T]
