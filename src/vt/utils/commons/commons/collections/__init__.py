@@ -7,3 +7,4 @@ Reusable common utilities, interfaces and implementations for python projects re
 
 from vt.utils.commons.commons.collections.utils import get_first_true as get_first_true
 from vt.utils.commons.commons.collections.utils import get_last_true as get_last_true
+from vt.utils.commons.commons.collections.utils import get_first_non_none as get_first_non_none

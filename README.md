@@ -81,10 +81,12 @@ A fully typed library for commons methods, utils, interfaces and implementations
 
 
 - Query and operate on iterables
-    ```python
-  from vt.utils.commons.commons.collections import get_first_true
+    ```doctest
+    >>> from vt.utils.commons.commons.collections import get_first_true, get_first_non_none
 
-  assert 3 == get_first_true([1, 3, 5, 7, 2, 1], 8, lambda x: x>2)
+    >>> assert 3 == get_first_true([1, 3, 5, 7, 2, 1], 8, lambda x: x>2)
+    >>> assert 10 == get_first_non_none([None, None, 10, 2, 6], 9)
+
     ```
     Check in `vt.utils.commons.commons.collections` and documentation for more functions and utilities related to collection management.
 

@@ -108,3 +108,77 @@ def get_last_true[T](
         the ``predicate`` returns ``True`` for no id(s).
     """
     return get_first_true(ids, default_val, predicate, reversed)
+
+
+def get_first_non_none[T](lst: list[T | None], default: T | None = None,
+                          iter_provider: Callable[[Sequence[T]], Iterator[T]] = iter) -> T | None:
+    """
+    Get first non-``None`` item from the list ``lst`` else ``default``.
+
+    Examples:
+
+      * Return the default if all values are ``None``:
+
+        >>> get_first_non_none([None, None, None], 5)
+        5
+
+      * default can be ``None``:
+
+        >>> get_first_non_none([None, None], None)
+
+      * first non-``None`` is returned:
+
+        >>> get_first_non_none([None, None, 2, None, 5], 9)
+        2
+
+      * default is returned when empty-list is supplied:
+
+        >>> get_first_non_none([], "some str")
+        'some str'
+
+        >>> get_first_non_none([], None) # None returned as default is None
+
+        >>> get_first_non_none([]) # None returned as default is None
+
+    :param lst: list of values.
+    :param default: value to return if list consists of all ``None``s.
+    :param iter_provider: iterator provider for the ``ids`` sequence.
+    :return: first non ``None`` value or ``default`` if all ``None`` are encountered.
+    """
+    return get_first_true(lst, default, lambda x: x is not None, iter_provider)
+
+
+def get_last_non_none[T](lst: list[T | None], default: T | None = None) -> T | None:
+    """
+    Get last non-``None`` item from the list ``lst`` else ``default``.
+
+    Examples:
+
+      * Return the default if all values are ``None``:
+
+        >>> get_last_non_none([None, None, None], 5)
+        5
+
+      * default can be ``None``:
+
+        >>> get_last_non_none([None, None], None)
+
+      * last non-``None`` is returned:
+
+        >>> get_last_non_none([None, None, 2, None, 5], 9)
+        5
+
+      * default is returned when empty-list is supplied:
+
+        >>> get_last_non_none([], "some str")
+        'some str'
+
+        >>> get_last_non_none([], None) # None returned as default is None
+
+        >>> get_last_non_none([]) # None returned as default is None
+
+    :param lst: list of values.
+    :param default: value to return if list consists of all ``None``s.
+    :return: first non ``None`` value or ``default`` if all ``None`` are encountered.
+    """
+    return get_first_non_none(lst, default, reversed)
