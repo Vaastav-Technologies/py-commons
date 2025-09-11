@@ -11,7 +11,11 @@
 ![PyPI - Version](https://img.shields.io/pypi/v/vt-commons)
 
 ---
-A fully typed library for commons methods, utils, interfaces and implementations for python projects.
+
+**🔥Reusable common utilities, interfaces and implementations for python projects.**
+
+---
+A fully typed library for common methods, utils, interfaces and implementations for python projects.
 
 ### Install
 
