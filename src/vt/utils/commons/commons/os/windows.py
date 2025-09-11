@@ -19,11 +19,11 @@ def not_windows() -> bool:
     """
     :return: ``True`` if system is not windows. ``False`` otherwise.
     """
-    return not is_windows()
+    return not is_windows() # pragma: no cover
 
 
 def is_windows() -> bool:
     """
     :return: ``True`` if system is windows. ``False`` otherwise.
     """
-    return _is_platform(WINDOWS_ID_STR)
+    return _is_platform(WINDOWS_ID_STR) # pragma: no cover

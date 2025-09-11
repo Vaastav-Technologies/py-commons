@@ -20,11 +20,11 @@ def not_posix() -> bool:
     """
     :return: ``True`` if system is not POSIX. ``False`` otherwise.
     """
-    return not is_posix()
+    return not is_posix() # pragma: no cover
 
 
 def is_posix() -> bool:
     """
     :return: ``True`` if system is POSIX. ``False`` otherwise.
     """
-    return _is_os_name(POSIX_ID_STR)
+    return _is_os_name(POSIX_ID_STR) # pragma: no cover

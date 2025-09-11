@@ -19,11 +19,11 @@ def not_linux() -> bool:
     """
     :return: ``True`` if system is not linux. ``False`` otherwise.
     """
-    return not is_linux()
+    return not is_linux() # pragma: no cover
 
 
 def is_linux() -> bool:
     """
     :return: ``True`` if system is linux. ``False`` otherwise.
     """
-    return _is_platform(LINUX_ID_STR)
+    return _is_platform(LINUX_ID_STR) # pragma: no cover

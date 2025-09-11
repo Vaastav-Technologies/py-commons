@@ -341,6 +341,14 @@ def alt_if_unset[T](obj: Any | Unset, alt: T) -> T:
 
 def is_ellipses(obj: Any) -> bool:
     """
+    Examples:
+
+    >>> is_ellipses(...)
+    True
+
+    >>> is_ellipses(1)
+    False
+
     :param obj: object to be tested whether it was supplied by caller or not.
     :return: ``True`` if the ``obj`` is missing and not supplied by caller, ``False`` otherwise.
     """
@@ -805,6 +813,21 @@ def has_atleast_one_arg(
 
 # region Internal utility functions to handle positional variadic args.
 def _filter_args(first, *rest, falsy):
+    """
+    Examples:
+
+    >>> _filter_args('a', 'b', '', falsy=True)
+    ('a', 'b')
+
+    >>> _filter_args('a', 'b', '', falsy=False)
+    ('a', 'b', '')
+
+    >>> _filter_args('a', 'b', None, falsy=True)
+    ('a', 'b')
+
+    >>> _filter_args('a', 'b', None, falsy=False)
+    ('a', 'b')
+    """
     args = (first, *rest)
     if falsy:
         return tuple(arg for arg in args if arg)
