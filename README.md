@@ -1,3 +1,5 @@
+from typing import overridefrom typing import override
+
 # vt-commons
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/vt-commons)
@@ -38,12 +40,15 @@ A fully typed library for common methods, utils, interfaces and implementations 
     ```python
   from vt.utils.commons.commons.op import RootDirOp, CWDRootDirOp, RootDirOps
   from pathlib import Path
+  from typing import override
 
   class MyRootDirectoryOperation(RootDirOp):
-      ...
-      @property
-      def root_dir(self)-> Path:
-          return Path('path', 'to', 'my', 'root-directory')
+    ...
+
+    @override
+    @property
+    def root_dir(self)-> Path:
+        return Path('path', 'to', 'my', 'root-directory')
 
   certain_root_dir_operation: CWDRootDirOp = RootDirOps.from_path(Path('path', 'to', 'my', 'root-directory'))
     ```
@@ -53,19 +58,21 @@ A fully typed library for common methods, utils, interfaces and implementations 
 - Perform state operations
     ```python
   from vt.utils.commons.commons.state import DoneMarker
+  from typing import override
 
   # Track state by marking done
   class MyStateManager(DoneMarker[int]):
-      def __init__(self, *args, **kwargs):
-          self.id_state = {1: False}
-          ...
-
-      def mark_done(self, _id: int)-> bool:
-          # mark done for _id
-          if self.id_state[_id] is True:
-              return False
-          self.id_state[_id] = True
-          return True
+    def __init__(self, *args, **kwargs):
+        self.id_state = {1: False}
+        ...
+    
+    @override
+    def mark_done(self, _id: int)-> bool:
+        # mark done for _id
+        if self.id_state[_id] is True:
+            return False
+        self.id_state[_id] = True
+        return True
     ```
     Check in `vt.utils.commons.commons.state` and documentation for more functions and utilities related to tracking state.
 
@@ -75,21 +82,21 @@ A fully typed library for common methods, utils, interfaces and implementations 
   from vt.utils.commons.commons.core_py import MISSING, Missing, is_missing
 
   def some_operation(arg: Missing = MISSING):
-      """
-      ``MISSING`` can be used as a default value sentinel when ``None`` is a valid value for arg.
-      """
-      arg = 10 if is_missing(arg) else arg
-      ...
+    """
+    ``MISSING`` can be used as a default value sentinel when ``None`` is a valid value for arg.
+    """
+    arg = 10 if is_missing(arg) else arg
+    ...
     ```
     Check in `vt.utils.commons.commons.core_py` and documentation for more functions and utilities related to function management.
 
 
 - Query and operate on iterables
-    ```doctest
-    >>> from vt.utils.commons.commons.collections import get_first_true, get_first_non_none
+    ```python
+  >>> from vt.utils.commons.commons.collections import get_first_true, get_first_non_none
 
-    >>> assert 3 == get_first_true([1, 3, 5, 7, 2, 1], 8, lambda x: x>2)
-    >>> assert 10 == get_first_non_none([None, None, 10, 2, 6], 9)
+  >>> assert 3 == get_first_true([1, 3, 5, 7, 2, 1], 8, lambda x: x>2)
+  >>> assert 10 == get_first_non_none([None, None, 10, 2, 6], 9)
 
     ```
     Check in `vt.utils.commons.commons.collections` and documentation for more functions and utilities related to collection management.
