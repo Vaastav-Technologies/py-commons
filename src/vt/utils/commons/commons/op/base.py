@@ -22,7 +22,7 @@ class ReversibleOp(Protocol):
         """
         :return: whether current operation is operating in the reverse mode.
         """
-        ...
+        ... # pragma: no cover
 
 
 # region Root dir related operations
@@ -37,7 +37,7 @@ class RootDirOp(Protocol):
         """
         :return: Path to the ``root_dir`` root directory for this operation.
         """
-        ...
+        ... # pragma: no cover
 
 
 class CWDRootDirOp(RootDirOp):
@@ -52,7 +52,7 @@ class CWDRootDirOp(RootDirOp):
     @override
     @property
     def root_dir(self) -> Path:
-        return self._root_dir
+        return self._root_dir   # pragma: no cover
 
 
 @final

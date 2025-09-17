@@ -683,7 +683,7 @@ def has_atleast_one_arg[T](
 
     ``first`` and ``rest`` all args must be of the same type when ``enforce_type`` is not provided or is ``None``.
     """
-    ...
+    ... # pragma: no cover
 
 
 @overload
@@ -698,7 +698,7 @@ def has_atleast_one_arg(
 
     ``first`` and ``rest`` all args can be of any type when ``enforce_type=False``.
     """
-    ...
+    ... # pragma: no cover
 
 
 @overload
@@ -712,7 +712,7 @@ def has_atleast_one_arg[T](
 
     For example, ``first`` and ``rest`` all args must be ``int`` when ``enforce_type=int``.
     """
-    ...
+    ... # pragma: no cover
 
 
 def has_atleast_one_arg(

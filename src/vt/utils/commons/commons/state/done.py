@@ -144,7 +144,7 @@ class DelegatingDoneVisitor[T](DoneVisitor[T], Protocol):
         """
         :return: stored ``DoneMarker``.
         """
-        ...
+        ... # pragma: no cover
 
     @property
     @abstractmethod
@@ -152,12 +152,12 @@ class DelegatingDoneVisitor[T](DoneVisitor[T], Protocol):
         """
         :return: stored ``DoneEnquirer``.
         """
-        ...
+        ... # pragma: no cover
 
     @override
     def mark_done(self, _id: T) -> bool:
-        return self.done_marker.mark_done(_id)
+        return self.done_marker.mark_done(_id) # pragma: no cover
 
     @override
     def is_done(self, _id: T) -> bool:
-        return self.done_enquirer.is_done(_id)
+        return self.done_enquirer.is_done(_id) # pragma: no cover
