@@ -101,6 +101,16 @@ A fully typed library for common methods, utils, interfaces and implementations 
     ```
     Check in `vt.utils.commons.commons.collections` and documentation for more functions and utilities related to collection management.
 
+- String operations
+    ```python
+  >>> from vt.utils.commons.commons.string import generate_random_string
+  
+  >>> generate_random_string()  #doctest: +ELLIPSIS
+  '...'
+
+    ```
+    Check in `vt.utils.commons.commons.string` and documentation for more functions and utilities related to strings
+
 
 ### Contribute
 
