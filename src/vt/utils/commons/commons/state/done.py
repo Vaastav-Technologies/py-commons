@@ -29,7 +29,7 @@ class DoneMarker[T](Protocol):
             is already marked done.
         :raise Exception: on underlying system error.
         """
-        ...
+        ... # pragma: no cover
 
 
 class DoneEnquirer[T](Protocol):
@@ -47,7 +47,7 @@ class DoneEnquirer[T](Protocol):
         :return: ``True`` if marking is done, ``False`` if marking is not done.
         :raise Exception: on underlying system error.
         """
-        ...
+        ... # pragma: no cover
 
     def get_first_done(self, ids: Sequence[T], default_val: T) -> T:
         """
