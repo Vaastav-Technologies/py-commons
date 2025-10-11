@@ -36,6 +36,7 @@ classifiers = [
   "Typing :: Typed"
 ]
 license = "Apache-2.0"
+license-files = ["LICEN[CS]E*", "AUTHORS.md"]
 
 [project.urls]
 homepage = "https://github.com/Vaastav-Technologies/py-commons"
