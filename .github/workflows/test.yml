@@ -2,7 +2,10 @@ name: 🔧 test
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - develop
+      - 'release/*'
   pull_request:
 
 jobs:
@@ -26,11 +29,10 @@ jobs:
       - name: 💼 Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov
+          python -m pip install . --group cover
 
       - name: 🧪 Run Doctests and Coverage
         run: |
-          python -m pip install .
           pytest --cov --cov-branch --cov-report=xml
 
       - name: 📈 Upload to Codecov

@@ -1,8 +1,6 @@
 [build-system]
-# A list of packages that are needed to build your package:
-requires = ["setuptools", "wheel"]  # REQUIRED if [build-system] table is used
-# The name of the Python object that frontends will use to perform the build:
-build-backend = "setuptools.build_meta"  # If not defined, then legacy behavior can happen.
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 
 [project]
@@ -17,7 +15,7 @@ maintainers = [
     {name = "Suhas Krishna Srivastava", email = "suhas.srivastava@vaastav.tech"}
 ]
 requires-python = ">=3.12"
-# For a list of valid classifiers, see https://pypi.org/classifiers/
+
 classifiers = [
   "Development Status :: 1 - Planning",
 
@@ -29,9 +27,6 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: Utilities",
 
-  # Specify the Python versions you support here. In particular, ensure
-  # that you indicate you support Python 3. These classifiers are *not*
-  # checked by "pip install". See instead "requires-python" key in this file.
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
@@ -41,6 +36,7 @@ classifiers = [
   "Typing :: Typed"
 ]
 license = "Apache-2.0"
+license-files = ["LICEN[CS]E*", "AUTHORS.md"]
 
 [project.urls]
 homepage = "https://github.com/Vaastav-Technologies/py-commons"
@@ -49,10 +45,13 @@ issues = "https://github.com/Vaastav-Technologies/py-commons/issues"
 
 
 [dependency-groups]
-dev = ["mypy", "ruff"]
-doc = ['sphinx', 'sphinx-argparse']
-test = ['pytest', 'pytest-cov']
-multitest = ['tox']
+lint = ["ruff"]
+typecheck = ["mypy"]
+dev = [{include-group = "lint"}, {include-group = "typecheck"}]
+test = ["pytest"]
+cover = [{include-group = "test"}, "pytest-cov"]
+multitest = ["tox"]
+doc = ["sphinx", "sphinx-argparse"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
