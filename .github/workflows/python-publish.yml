@@ -56,14 +56,12 @@ jobs:
         with:
           name: release-dists
           path: dist/
-#          verbose: true
 
       - name: 🚀 Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: dist/
-#          verbose: true
 
   pypi-publish:
     name: 📦 Publish to PyPI
