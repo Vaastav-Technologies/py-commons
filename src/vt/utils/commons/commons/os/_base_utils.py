@@ -10,8 +10,8 @@ import platform
 
 
 def _is_platform(platform_name: str) -> bool:
-    return platform.system() == platform_name # pragma: no cover
+    return platform.system() == platform_name  # pragma: no cover
 
 
 def _is_os_name(os_name: str) -> bool:
-    return os.name == os_name # pragma: no cover
+    return os.name == os_name  # pragma: no cover

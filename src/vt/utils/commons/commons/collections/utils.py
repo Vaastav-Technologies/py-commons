@@ -110,8 +110,11 @@ def get_last_true[T](
     return get_first_true(ids, default_val, predicate, reversed)
 
 
-def get_first_non_none[T](lst: list[T | None], default: T | None = None,
-                          iter_provider: Callable[[Sequence[T | None]], Iterator[T | None]] = iter) -> T | None:
+def get_first_non_none[T](
+    lst: list[T | None],
+    default: T | None = None,
+    iter_provider: Callable[[Sequence[T | None]], Iterator[T | None]] = iter,
+) -> T | None:
     """
     Get first non-``None`` item from the list ``lst`` else ``default``.
 

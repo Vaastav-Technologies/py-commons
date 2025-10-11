@@ -4,13 +4,16 @@
 """
 Reusable interfaces and methods related to strings in python.
 """
+
 import random
 import secrets
 import string
 from collections.abc import Sequence
 
 
-def generate_random_string(length: int = 10, characters: Sequence[str] | None = None, secure: bool = False) -> str:
+def generate_random_string(
+    length: int = 10, characters: Sequence[str] | None = None, secure: bool = False
+) -> str:
     """
     Generates a random/secure string of a specified length using a given set of characters.
 
@@ -24,4 +27,4 @@ def generate_random_string(length: int = 10, characters: Sequence[str] | None = 
     if characters is None:
         characters = string.ascii_letters + string.digits
     rand_provider = secrets if secure else random
-    return ''.join(rand_provider.choice(characters) for _ in range(length))
+    return "".join(rand_provider.choice(characters) for _ in range(length))

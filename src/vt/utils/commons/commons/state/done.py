@@ -29,7 +29,7 @@ class DoneMarker[T](Protocol):
             is already marked done.
         :raise Exception: on underlying system error.
         """
-        ... # pragma: no cover
+        ...  # pragma: no cover
 
 
 class DoneEnquirer[T](Protocol):
@@ -47,7 +47,7 @@ class DoneEnquirer[T](Protocol):
         :return: ``True`` if marking is done, ``False`` if marking is not done.
         :raise Exception: on underlying system error.
         """
-        ... # pragma: no cover
+        ...  # pragma: no cover
 
     def get_first_done(self, ids: Sequence[T], default_val: T) -> T:
         """
@@ -144,7 +144,7 @@ class DelegatingDoneVisitor[T](DoneVisitor[T], Protocol):
         """
         :return: stored ``DoneMarker``.
         """
-        ... # pragma: no cover
+        ...  # pragma: no cover
 
     @property
     @abstractmethod
@@ -152,12 +152,12 @@ class DelegatingDoneVisitor[T](DoneVisitor[T], Protocol):
         """
         :return: stored ``DoneEnquirer``.
         """
-        ... # pragma: no cover
+        ...  # pragma: no cover
 
     @override
     def mark_done(self, _id: T) -> bool:
-        return self.done_marker.mark_done(_id) # pragma: no cover
+        return self.done_marker.mark_done(_id)  # pragma: no cover
 
     @override
     def is_done(self, _id: T) -> bool:
-        return self.done_enquirer.is_done(_id) # pragma: no cover
+        return self.done_enquirer.is_done(_id)  # pragma: no cover
