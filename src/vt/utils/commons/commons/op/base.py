@@ -103,13 +103,15 @@ class RootDirOps:
         :raises ValueError: when both ``root_dir`` and ``root_dir_op`` are supplied.
         :return: root dir path.
         """
-        if root_dir is None and root_dir_op is None:
-            raise ValueError(f"Either {root_dir_str} or {root_dir_op_str} is required.")
         if root_dir and root_dir_op:
             raise ValueError(
                 f"{root_dir_str} and {root_dir_op_str} are not allowed together."
             )
-        return root_dir if root_dir else root_dir_op.root_dir
+        if root_dir:
+            return root_dir
+        if root_dir_op:
+            return root_dir_op.root_dir
+        raise ValueError(f"Either {root_dir_str} or {root_dir_op_str} is required.")
 
     @staticmethod
     def from_path(root_dir: Path = Path.cwd()) -> CWDRootDirOp:
