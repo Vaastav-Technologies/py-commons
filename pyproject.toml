@@ -45,10 +45,13 @@ issues = "https://github.com/Vaastav-Technologies/py-commons/issues"
 
 
 [dependency-groups]
-dev = ["mypy", "ruff"]
-doc = ['sphinx', 'sphinx-argparse']
-test = ['pytest', 'pytest-cov']
-multitest = ['tox']
+lint = ["ruff"]
+typecheck = ["mypy"]
+dev = [{include-group = "lint"}, {include-group = "typecheck"}]
+test = ["pytest"]
+cover = [{include-group = "test"}, "pytest-cov"]
+multitest = ["tox"]
+doc = ["sphinx", "sphinx-argparse"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
