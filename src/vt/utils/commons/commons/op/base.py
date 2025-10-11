@@ -68,7 +68,7 @@ class RootDirOps:
         *,
         root_dir_str: str = "root_dir",
         root_dir_op_str: str = "root_dir_op",
-    ):
+    ) -> Path:
         """
         Convenience method to raise ``ValueError`` when both ``root_dir`` and ``root_dir_op`` are supplied.
 
@@ -76,11 +76,11 @@ class RootDirOps:
 
           * OK: only root-dir supplied:
 
-            >>> RootDirOps.strictly_one_required(Path.cwd())
+            >>> assert Path.cwd() == RootDirOps.strictly_one_required(Path.cwd())
 
           * OK: only root-dir-op supplied:
 
-            >>> RootDirOps.strictly_one_required(root_dir_op=RootDirOps.from_path(Path('tmp')))
+            >>> assert Path('tmp') == RootDirOps.strictly_one_required(root_dir_op=RootDirOps.from_path(Path('tmp')))
 
           * At least one of ``root_dir`` or ``root_dir_op`` must be provided:
 
@@ -101,6 +101,7 @@ class RootDirOps:
         :param root_dir_op_str: variable name string for overriding the default ``root_dir_op`` variable name in error
             messages.
         :raises ValueError: when both ``root_dir`` and ``root_dir_op`` are supplied.
+        :return: root dir path.
         """
         if root_dir is None and root_dir_op is None:
             raise ValueError(f"Either {root_dir_str} or {root_dir_op_str} is required.")
@@ -108,6 +109,7 @@ class RootDirOps:
             raise ValueError(
                 f"{root_dir_str} and {root_dir_op_str} are not allowed together."
             )
+        return root_dir if root_dir else root_dir_op.root_dir
 
     @staticmethod
     def from_path(root_dir: Path = Path.cwd()) -> CWDRootDirOp:
