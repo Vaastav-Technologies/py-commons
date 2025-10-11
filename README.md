@@ -1,5 +1,3 @@
-from typing import overridefrom typing import override
-
 # vt-commons
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/vt-commons)
