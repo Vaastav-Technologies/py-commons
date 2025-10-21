@@ -31,6 +31,38 @@ class DoneMarker[T](Protocol):
         """
         ...  # pragma: no cover
 
+    @classmethod
+    def true(cls) -> "AlwaysTrue[T]":
+        """
+        ``mark_done()`` on this instance always returns ``True``.
+
+        >>> assert DoneMarker.true().mark_done("")
+        >>> assert DoneMarker.true().mark_done("abcd")
+        >>> assert DoneMarker.true().mark_done(0)
+        >>> assert DoneMarker.true().mark_done(2)
+        >>> assert DoneMarker.true().mark_done(None)
+
+        :return: ``AlwaysTrue``.
+        """
+        # TODO: try to return singleton __always_true_obj
+        return AlwaysTrue()
+
+    @classmethod
+    def false(cls) -> "AlwaysFalse[T]":
+        """
+        ``mark_done()`` on this instance always returns ``False``.
+
+        >>> assert not DoneMarker.false().mark_done("")
+        >>> assert not DoneMarker.false().mark_done("abcd")
+        >>> assert not DoneMarker.false().mark_done(0)
+        >>> assert not DoneMarker.false().mark_done(2)
+        >>> assert not DoneMarker.false().mark_done(None)
+
+        :return: ``AlwaysFalse``.
+        """
+        # TODO: try to return singleton __always_false_obj
+        return AlwaysFalse()
+
 
 class DoneEnquirer[T](Protocol):
     """
@@ -48,6 +80,38 @@ class DoneEnquirer[T](Protocol):
         :raise Exception: on underlying system error.
         """
         ...  # pragma: no cover
+
+    @classmethod
+    def true(cls) -> "AlwaysTrue[T]":
+        """
+        ``is_done()`` on this instance always returns ``True``.
+
+        >>> assert DoneEnquirer.true().is_done("")
+        >>> assert DoneEnquirer.true().is_done("abcd")
+        >>> assert DoneEnquirer.true().is_done(0)
+        >>> assert DoneEnquirer.true().is_done(2)
+        >>> assert DoneEnquirer.true().is_done(None)
+
+        :return: ``AlwaysTrue``.
+        """
+        # TODO: try to return singleton __always_true_obj
+        return AlwaysTrue()
+
+    @classmethod
+    def false(cls) -> "AlwaysFalse[T]":
+        """
+        ``is_done()`` on this instance always returns ``True``.
+
+        >>> assert not DoneEnquirer.false().is_done("")
+        >>> assert not DoneEnquirer.false().is_done("abcd")
+        >>> assert not DoneEnquirer.false().is_done(0)
+        >>> assert not DoneEnquirer.false().is_done(2)
+        >>> assert not DoneEnquirer.false().is_done(None)
+
+        :return: ``AlwaysFalse``.
+        """
+        # TODO: try to return singleton __always_false_obj
+        return AlwaysFalse()
 
     def get_first_done(self, ids: Sequence[T], default_val: T) -> T:
         """
@@ -124,6 +188,82 @@ class DoneVisitor[T](DoneMarker[T], DoneEnquirer[T], Protocol):
     """
 
     pass
+
+
+# region State singletons
+# region AlwaysTrue and related vars
+class AlwaysTrue[T](DoneVisitor[T]):
+    """
+    Convenience object to function as a truthy value always.
+    """
+
+    @override
+    def is_done(self, _id: T) -> bool:
+        """
+        >>> assert AlwaysTrue().is_done(None)       # falsy values return true as well
+        >>> assert AlwaysTrue[int]().is_done(5)
+        >>> assert AlwaysTrue[int]().is_done(0)     # falsy values return true as well
+        >>> assert AlwaysTrue[str]().is_done("")    # falsy values return true as well
+        >>> assert AlwaysTrue[str]().is_done("true")
+
+        :return: ``True`` always
+        """
+        return True
+
+    @override
+    def mark_done(self, _id) -> bool:
+        """
+        >>> assert AlwaysTrue().mark_done(None)       # falsy values return true as well
+        >>> assert AlwaysTrue[int]().mark_done(5)
+        >>> assert AlwaysTrue[int]().mark_done(0)     # falsy values return true as well
+        >>> assert AlwaysTrue[str]().mark_done("")    # falsy values return true as well
+        >>> assert AlwaysTrue[str]().mark_done("true")
+
+        :return: ``True`` always
+        """
+        return True
+
+
+__always_true_obj: AlwaysTrue = AlwaysTrue()
+# endregion
+
+
+# region AlwaysFalse and related vars
+class AlwaysFalse[T](DoneVisitor[T]):
+    """
+    Convenience object to function as a falsy value always.
+    """
+
+    @override
+    def is_done(self, _id: T) -> bool:
+        """
+        >>> assert not AlwaysFalse().is_done(True)       # truthy values return false
+        >>> assert not AlwaysFalse[int]().is_done(5)         # truthy values return false
+        >>> assert not AlwaysFalse[int]().is_done(0)
+        >>> assert not AlwaysFalse[str]().is_done("")
+        >>> assert not AlwaysFalse[str]().is_done("true")    # truthy values return false
+
+        :return: ``False`` always
+        """
+        return False
+
+    @override
+    def mark_done(self, _id) -> bool:
+        """
+        >>> assert not AlwaysFalse().mark_done(True)       # truthy values return false
+        >>> assert not AlwaysFalse[int]().mark_done(5)         # truthy values return false
+        >>> assert not AlwaysFalse[int]().mark_done(0)
+        >>> assert not AlwaysFalse[str]().mark_done("")
+        >>> assert not AlwaysFalse[str]().mark_done("true")    # truthy values return false
+
+        :return: ``False`` always
+        """
+        return False
+
+
+__always_false_obj: AlwaysFalse = AlwaysFalse()
+# endregion
+# endregion
 
 
 class DelegatingDoneVisitor[T](DoneVisitor[T], Protocol):
