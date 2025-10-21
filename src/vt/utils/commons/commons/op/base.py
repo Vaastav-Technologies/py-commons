@@ -11,10 +11,25 @@ from pathlib import Path
 from typing import Protocol, override, final
 
 
+class AlwaysTrue('ReversibleOp'):
+    @override
+    def rev(self) -> bool:
+        return True
+
+
+class AlwaysFalse('ReversibleOp'):
+    @override
+    def rev(self) -> bool:
+        return False
+
+
 class ReversibleOp(Protocol):
     """
     Operation that can be reversed or act in the reversed mode.
     """
+
+    __always_true: AlwaysTrue = AlwaysTrue()
+    __always_false: AlwaysFalse = AlwaysFalse()
 
     @property
     @abstractmethod
@@ -23,6 +38,24 @@ class ReversibleOp(Protocol):
         :return: whether current operation is operating in the reverse mode.
         """
         ...  # pragma: no cover
+
+    @staticmethod
+    def true() -> AlwaysTrue:
+        """
+        >>> assert ReversibleOp.true().rev()
+
+        :return:
+        """
+        return ReversibleOp.__always_true
+
+    @staticmethod
+    def false() -> AlwaysFalse:
+        """
+        >>> assert not ReversibleOp.false().rev()
+
+        :return:
+        """
+        return ReversibleOp.__always_false
 
 
 # region Root dir related operations
