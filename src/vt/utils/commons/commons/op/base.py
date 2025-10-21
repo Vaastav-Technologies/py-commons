@@ -11,14 +11,16 @@ from pathlib import Path
 from typing import Protocol, override, final
 
 
-class AlwaysTrue('ReversibleOp'):
+class AlwaysTrue("ReversibleOp"):
     @override
+    @property
     def rev(self) -> bool:
         return True
 
 
-class AlwaysFalse('ReversibleOp'):
+class AlwaysFalse("ReversibleOp"):
     @override
+    @property
     def rev(self) -> bool:
         return False
 
