@@ -30,9 +30,15 @@ def generate_random_string(
     return "".join(rand_provider.choice(characters) for _ in range(length))
 
 
-def last_char_remove(s: str, c: str = "\n") -> str:
+def last_char_remove(s: str, c: str = "\n", lenient: bool = True) -> str:
     r"""
     Removes the last character from the given string.
+
+    >>> assert '' == last_char_remove('')
+
+    >>> last_char_remove('', lenient=False)
+    Traceback (most recent call last):
+    IndexError: string index out of range
 
     >>> assert '' == last_char_remove('\n')
 
@@ -40,8 +46,16 @@ def last_char_remove(s: str, c: str = "\n") -> str:
 
     >>> assert '' == last_char_remove(last_char_remove('\r\n'), '\r')
 
+    >>> assert 'a message' == last_char_remove('a message')
+
     :param s: source string.
     :param c: last char to remove.
+    :param lenient: be lenient even if there are index-out-of-ranges.
     :return: string with the last char remove.
     """
-    return s[:-1] if s[-1] == c else s
+    try:
+        return s[:-1] if s[-1] == c else s
+    except IndexError:
+        if lenient:
+            return s
+        raise
