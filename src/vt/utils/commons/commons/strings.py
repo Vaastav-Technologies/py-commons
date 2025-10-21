@@ -28,3 +28,20 @@ def generate_random_string(
         characters = string.ascii_letters + string.digits
     rand_provider = secrets if secure else random
     return "".join(rand_provider.choice(characters) for _ in range(length))
+
+
+def last_char_remove(s: str, c: str = '\n') -> str:
+    r"""
+    Removes the last character from the given string.
+
+    >>> assert '' == last_char_remove('\n')
+
+    >>> assert '\n' == last_char_remove('\n\n')
+
+    >>> assert '' == last_char_remove(last_char_remove('\r\n'), '\r')
+
+    :param s: source string.
+    :param c: last char to remove.
+    :return: string with the last char remove.
+    """
+    return s[:-1] if s[-1] == c else s

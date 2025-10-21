@@ -101,7 +101,7 @@ A fully typed library for common methods, utils, interfaces and implementations 
 
 - String operations
     ```python
-  >>> from vt.utils.commons.commons.string import generate_random_string
+  >>> from vt.utils.commons.commons.strings import generate_random_string
   
   >>> generate_random_string()  #doctest: +ELLIPSIS
   '...'
