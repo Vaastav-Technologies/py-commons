@@ -30,7 +30,7 @@ def generate_random_string(
     return "".join(rand_provider.choice(characters) for _ in range(length))
 
 
-def last_char_remove(s: str, c: str = '\n') -> str:
+def last_char_remove(s: str, c: str = "\n") -> str:
     r"""
     Removes the last character from the given string.
 
