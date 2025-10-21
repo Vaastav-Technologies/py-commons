@@ -11,27 +11,13 @@ from pathlib import Path
 from typing import Protocol, override, final
 
 
-class AlwaysTrue("ReversibleOp"):
-    @override
-    @property
-    def rev(self) -> bool:
-        return True
-
-
-class AlwaysFalse("ReversibleOp"):
-    @override
-    @property
-    def rev(self) -> bool:
-        return False
-
-
 class ReversibleOp(Protocol):
     """
     Operation that can be reversed or act in the reversed mode.
     """
 
-    __always_true: AlwaysTrue = AlwaysTrue()
-    __always_false: AlwaysFalse = AlwaysFalse()
+    # __always_true = AlwaysTrue()
+    # __always_false = AlwaysFalse()
 
     @property
     @abstractmethod
@@ -44,20 +30,38 @@ class ReversibleOp(Protocol):
     @staticmethod
     def true() -> AlwaysTrue:
         """
-        >>> assert ReversibleOp.true().rev()
+        >>> assert ReversibleOp.true().rev
 
         :return:
         """
-        return ReversibleOp.__always_true
+        # TODO: try to return singleton __always_true
+        # return ReversibleOp.__always_true
+        return AlwaysTrue()
 
     @staticmethod
     def false() -> AlwaysFalse:
         """
-        >>> assert not ReversibleOp.false().rev()
+        >>> assert not ReversibleOp.false().rev
 
         :return:
         """
-        return ReversibleOp.__always_false
+        # TODO: try to return singleton __always_false
+        # return ReversibleOp.__always_false
+        return AlwaysFalse()
+
+
+class AlwaysTrue(ReversibleOp):
+    @override
+    @property
+    def rev(self) -> bool:
+        return True
+
+
+class AlwaysFalse(ReversibleOp):
+    @override
+    @property
+    def rev(self) -> bool:
+        return False
 
 
 # region Root dir related operations
