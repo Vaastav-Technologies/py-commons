@@ -6,9 +6,10 @@ Reusable interfaces and methods related to strings in python.
 """
 
 import random
+import re
 import secrets
 import string
-from collections.abc import Sequence
+from collections.abc import Sequence, Callable
 
 
 def generate_random_string(
@@ -59,3 +60,28 @@ def last_char_remove(s: str, c: str = "\n", lenient: bool = True) -> str:
         if lenient:
             return s
         raise
+
+
+def match_regexp(str_list: list[str], regexp_list: list[re.Pattern],
+                 match_lambda: Callable[[re.Pattern, str], bool] = lambda r, s: r.match(s)) -> list[str]:
+    """
+    Get a list of strings matching ``match_lambda`` criteria which match any regexp from ``regexp_list``.
+
+    >>> match_regexp(["-q", "-v", "-qq"], [re.compile("-q+")])
+    ['-q', '-qq']
+
+    >>> match_regexp(["-q", "-vv", "-qqq", "-beau"], [re.compile("-q+")], lambda r, s: not r.match(s))
+    ['-vv', '-beau']
+
+    :param str_list: source list of strings.
+    :param regexp_list: list of regular expressions to match each element of ``str_list``.
+    :param match_lambda: criteria to perform match for populating return list.
+    :return: a new list of strings containing strings that match any regexp from the ``regexp_list`` and fulfill the
+        ``match_lambda``.
+    """
+    ret_list: list[str] = []
+    for _r in regexp_list:
+        for _s in str_list:
+            if match_lambda(_r, _s):
+                ret_list.append(_s)
+    return ret_list
