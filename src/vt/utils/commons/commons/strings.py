@@ -62,8 +62,11 @@ def last_char_remove(s: str, c: str = "\n", lenient: bool = True) -> str:
         raise
 
 
-def match_regexp(str_list: list[str], regexp_list: list[re.Pattern],
-                 match_lambda: Callable[[re.Pattern, str], bool] = lambda r, s: r.match(s)) -> list[str]:
+def match_regexp(
+    str_list: list[str],
+    regexp_list: list[re.Pattern],
+    match_lambda: Callable[[re.Pattern, str], bool] = lambda r, s: r.match(s),
+) -> list[str]:
     """
     Get a list of strings matching ``match_lambda`` criteria which match any regexp from ``regexp_list``.
 
