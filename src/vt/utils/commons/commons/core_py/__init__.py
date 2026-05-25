@@ -40,3 +40,7 @@ from vt.utils.commons.commons.core_py.utils import (
 )
 from vt.utils.commons.commons.core_py.utils import strictly_int as strictly_int
 # endregion
+
+# region bytes and bits
+from vt.utils.commons.commons.core_py.bbytes import read_exact as read_exact
+# endregion
