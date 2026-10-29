@@ -172,3 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+# useful to form commit and release messages
+release-msg.md
+# useful to form plan with AIs
+plan.md
+# local MCP servers of the IDE (per machine, per port)
+.mcp.json
+
