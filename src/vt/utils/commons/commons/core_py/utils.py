@@ -5,184 +5,210 @@
 Reusable utilities related to core python.
 """
 
+import sys
 from collections.abc import Callable, Sequence
-from typing import Any, cast, TypeGuard, overload, Literal
+from types import EllipsisType
+from typing import Any, Literal, TypeGuard, cast, overload
 
-from vt.utils.commons.commons.core_py.base import MISSING, Missing, UNSET, Unset
+if sys.version_info >= (3, 13):
+    from typing import TypeIs
+else:
+    from typing_extensions import TypeIs
+
+from vt.utils.commons.commons.core_py.base import MISSING, UNSET, Missing, Unset
 
 
-def is_missing[T](obj: T) -> TypeGuard[Missing]:
+def is_missing(obj: object) -> TypeIs[Missing]:
     """
-    Determine whether an ``obj`` is ``MISSING``, i.e. not supplied by the caller.
+    Check whether ``obj`` is ``MISSING``, i.e. it was not supplied by the caller.
+
+    Type checkers narrow ``obj`` on both branches: to ``Missing`` when this returns ``True``, and to the rest of its
+    declared type (e.g. ``int`` from ``int | Missing``) when it returns ``False``. That relies on ``MISSING`` being
+    the only ``Missing`` object, so never create another one.
 
     Examples:
 
-    * ``obj`` is ``MISSING``, i.e. not supplied by the caller:
+      * ``True`` is expected on ``MISSING``, as it was not supplied:
 
-    >>> obj_to_test = MISSING
-    >>> is_missing(obj_to_test)
-    True
+        >>> is_missing(MISSING)
+        True
 
-    * ``obj`` is supplied but ``None``, i.e. it is supplied by the caller and hence, not missing:
+      * ``False`` is expected on ``None``, as ``None`` is a supplied value:
 
-    >>> is_missing(None)
-    False
+        >>> is_missing(None)
+        False
 
-    * ``obj`` is truthy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not missing:
+      * ``False`` is expected on falsy values, as they are supplied values too:
 
-    >>> is_missing(2) or is_missing('a') or is_missing(2.5) or is_missing(True) or is_missing(1+0j) or is_missing(b'y')
-    False
+        >>> any(is_missing(_obj) for _obj in (0, '', 0.0, False, 0j, b'', [], {}, set()))
+        False
 
-    * ``obj`` is falsy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not missing:
+      * ``False`` is expected on truthy values:
 
-    >>> is_missing(0) or is_missing('') or is_missing(0.0) or is_missing(False) or is_missing(0j) or is_missing(b'')
-    False
+        >>> any(is_missing(_obj) for _obj in (2, 'a', 2.5, True, 1+0j, b'y', [1], {1: 'a'}, {2.5}))
+        False
 
-    * ``obj`` is truthy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not missing:
+      * ``False`` is expected on the other sentinel, as ``UNSET`` was supplied:
 
-    >>> is_missing([1, 2, 3]) or is_missing({1: 'a', 2: 'b'}) or is_missing({2.5, 2.0})
-    False
+        >>> is_missing(UNSET)
+        False
 
-    * ``obj`` is falsy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not missing:
-
-    >>> is_missing([]) or is_missing({}) or is_missing(set())
-    False
-
-    :param obj: object to be tested whether it was supplied by caller or not.
-    :return: ``True`` if the ``obj`` is missing and not supplied by caller, ``False`` otherwise.
+    :param obj: object to check.
+    :return: ``True`` if ``obj`` is ``MISSING``, ``False`` otherwise.
     """
     return obj is MISSING
 
 
-def is_unset[T](obj: T) -> TypeGuard[Unset]:
+def is_unset(obj: object) -> TypeIs[Unset]:
     """
-    Determine whether an ``obj`` is ``UNSET``, i.e. deliberately unset an already set value by the caller.
+    Check whether ``obj`` is ``UNSET``, i.e. the caller deliberately unset an already set value.
+
+    Type checkers narrow ``obj`` on both branches: to ``Unset`` when this returns ``True``, and to the rest of its
+    declared type (e.g. ``str`` from ``str | Unset``) when it returns ``False``. That relies on ``UNSET`` being the
+    only ``Unset`` object, so never create another one.
 
     Examples:
 
-    * ``obj`` is ``UNSET``, i.e. deliberately unset by the caller:
+      * ``True`` is expected on ``UNSET``, as the caller deliberately unset the value:
 
-    >>> obj_to_test = UNSET
-    >>> is_unset(obj_to_test)
-    True
+        >>> is_unset(UNSET)
+        True
 
-    * ``obj`` is supplied but ``None``, i.e. it is supplied by the caller and hence, not unset:
+      * ``False`` is expected on ``None``, as ``None`` is a supplied value:
 
-    >>> is_unset(None)
-    False
+        >>> is_unset(None)
+        False
 
-    * ``obj`` is truthy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not unset:
+      * ``False`` is expected on falsy values, as they are supplied values too:
 
-    >>> is_unset(2) or is_unset('a') or is_unset(2.5) or is_unset(True) or is_unset(1+0j) or is_unset(b'y')
-    False
+        >>> any(is_unset(_obj) for _obj in (0, '', 0.0, False, 0j, b'', [], {}, set()))
+        False
 
-    * ``obj`` is falsy primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not unset:
+      * ``False`` is expected on truthy values:
 
-    >>> is_unset(0) or is_unset('') or is_unset(0.0) or is_unset(False) or is_unset(0j) or is_unset(b'')
-    False
+        >>> any(is_unset(_obj) for _obj in (2, 'a', 2.5, True, 1+0j, b'y', [1], {1: 'a'}, {2.5}))
+        False
 
-    * ``obj`` is truthy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not unset:
+      * ``False`` is expected on the other sentinel, as ``MISSING`` does not unset anything:
 
-    >>> is_unset([1, 2, 3]) or is_unset({1: 'a', 2: 'b'}) or is_unset({2.5, 2.0})
-    False
+        >>> is_unset(MISSING)
+        False
 
-    * ``obj`` is falsy non-primitive and supplied but non ``None``, i.e. it is supplied by the caller and
-      hence, not unset:
-
-    >>> is_unset([]) or is_unset({}) or is_unset(set())
-    False
-
-    :param obj: object to be tested whether it was supplied by caller or not.
-    :return: ``True`` if the ``obj`` is deliberatley unset by the caller, ``False`` otherwise.
+    :param obj: object to check.
+    :return: ``True`` if ``obj`` is ``UNSET``, ``False`` otherwise.
     """
     return obj is UNSET
 
 
+# Stays a TypeGuard: the type system cannot express "T without the sentinel's type", so a False result tells a type
+# checker nothing it can narrow by. Use not_none_not_unset() or not_none_not_missing() to narrow both branches.
 def not_none_not_sentinel[T, S](val: T | None, *, sentinel: S) -> TypeGuard[T]:
     """
-    Returns True if ``val`` is not None and not the given sentinel.
+    Check whether ``val`` is neither ``None`` nor the given ``sentinel``.
 
-    Used to create specific type guards for `UNSET`, `MISSING`, or any custom sentinel.
+    Type checkers narrow ``val`` only when this returns ``True``, and only usefully when the sentinel's type is not
+    part of ``val``'s declared type: for ``val: str | None`` it narrows to ``str``, but for ``val: int | None | Unset``
+    ``T`` takes in ``Unset`` and the narrowed type is too wide to use. A ``False`` result narrows nothing. For
+    ``UNSET`` and ``MISSING``, use ``not_none_not_unset()`` and ``not_none_not_missing()``, which narrow both
+    branches.
 
-    >>> not_none_not_sentinel("x", sentinel=UNSET)
-    True
-    >>> not_none_not_sentinel(None, sentinel=UNSET)
-    False
-    >>> not_none_not_sentinel(UNSET, sentinel=UNSET)
-    False
+    Examples:
+
+      * ``True`` is expected on a value, as it is neither ``None`` nor the sentinel:
+
+        >>> not_none_not_sentinel("x", sentinel=UNSET)
+        True
+
+      * ``True`` is expected on a falsy value, as only ``None`` and the sentinel are refused:
+
+        >>> not_none_not_sentinel(0, sentinel=UNSET)
+        True
+
+      * ``False`` is expected on ``None``:
+
+        >>> not_none_not_sentinel(None, sentinel=UNSET)
+        False
+
+      * ``False`` is expected on the sentinel itself:
+
+        >>> not_none_not_sentinel(UNSET, sentinel=UNSET)
+        False
+
+    :param val: value to check.
+    :param sentinel: the sentinel object that ``val`` must not be.
+    :return: ``True`` if ``val`` is neither ``None`` nor ``sentinel``, ``False`` otherwise.
     """
     return val is not None and val is not sentinel
 
 
-def not_none_not_unset[T](val: T | None | Unset) -> TypeGuard[T]:
+def not_none_not_unset[T](val: T | None | Unset) -> TypeIs[T]:
     """
-    Check if the value is neither None nor UNSET.
+    Check whether ``val`` is neither ``None`` nor ``UNSET``.
 
-    >>> not_none_not_unset("a")
-    True
-    >>> not_none_not_unset(None)
-    False
-    >>> not_none_not_unset(UNSET)
-    False
+    Type checkers narrow ``val`` on both branches: e.g. for ``val: int | None | Unset``, to ``int`` when this returns
+    ``True`` and to ``None | Unset`` when it returns ``False``.
 
-    >>> not_none_not_unset(0)
-    True
-    >>> not_none_not_unset("")
-    True
-    >>> not_none_not_unset(False)
-    True
-    >>> not_none_not_unset([])
-    True
-    >>> not_none_not_unset({})
-    True
-    >>> not_none_not_unset(set())
-    True
+    Examples:
 
-    >>> _val: int | None | Unset = 5
-    >>> if not_none_not_unset(_val):
-    ...     type(_val)  # Revealed type is "int"
-    <class 'int'>
+      * ``True`` is expected on a value:
+
+        >>> not_none_not_unset("a")
+        True
+
+      * ``True`` is expected on falsy values, as only ``None`` and ``UNSET`` are refused:
+
+        >>> all(not_none_not_unset(_val) for _val in (0, '', False, [], {}, set()))
+        True
+
+      * ``False`` is expected on ``None``:
+
+        >>> not_none_not_unset(None)
+        False
+
+      * ``False`` is expected on ``UNSET``:
+
+        >>> not_none_not_unset(UNSET)
+        False
+
+    :param val: value to check.
+    :return: ``True`` if ``val`` is neither ``None`` nor ``UNSET``, ``False`` otherwise.
     """
-    return not_none_not_sentinel(val, sentinel=UNSET)
+    return val is not None and val is not UNSET
 
 
-def not_none_not_missing[T](val: T | None | Missing) -> TypeGuard[T]:
+def not_none_not_missing[T](val: T | None | Missing) -> TypeIs[T]:
     """
-    Check if the value is neither None nor MISSING.
+    Check whether ``val`` is neither ``None`` nor ``MISSING``.
 
-    >>> not_none_not_missing("b")
-    True
-    >>> not_none_not_missing(None)
-    False
-    >>> not_none_not_missing(MISSING)
-    False
+    Type checkers narrow ``val`` on both branches: e.g. for ``val: str | None | Missing``, to ``str`` when this
+    returns ``True`` and to ``None | Missing`` when it returns ``False``.
 
-    >>> not_none_not_missing(0)
-    True
-    >>> not_none_not_missing("")
-    True
-    >>> not_none_not_missing(False)
-    True
-    >>> not_none_not_missing([])
-    True
-    >>> not_none_not_missing({})
-    True
-    >>> not_none_not_missing(set())
-    True
+    Examples:
 
-    >>> _val: str | None | Missing = "hello"
-    >>> if not_none_not_missing(_val):
-    ...     type(_val)  # Revealed type is "str"
-    <class 'str'>
+      * ``True`` is expected on a value:
+
+        >>> not_none_not_missing("b")
+        True
+
+      * ``True`` is expected on falsy values, as only ``None`` and ``MISSING`` are refused:
+
+        >>> all(not_none_not_missing(_val) for _val in (0, '', False, [], {}, set()))
+        True
+
+      * ``False`` is expected on ``None``:
+
+        >>> not_none_not_missing(None)
+        False
+
+      * ``False`` is expected on ``MISSING``:
+
+        >>> not_none_not_missing(MISSING)
+        False
+
+    :param val: value to check.
+    :return: ``True`` if ``val`` is neither ``None`` nor ``MISSING``, ``False`` otherwise.
     """
-    return not_none_not_sentinel(val, sentinel=MISSING)
+    return val is not None and val is not MISSING
 
 
 def _alt_if_predicate_true[T, U](
@@ -339,18 +365,32 @@ def alt_if_unset[T](obj: Any | Unset, alt: T) -> T:
     return _alt_if_predicate_true(obj, alt, is_unset)
 
 
-def is_ellipses(obj: Any) -> bool:
+def is_ellipses(obj: object) -> TypeIs[EllipsisType]:
     """
+    Check whether ``obj`` is the ``...`` (``Ellipsis``) object.
+
+    Type checkers narrow ``obj`` on both branches: to ``EllipsisType`` when this returns ``True``, and to the rest of
+    its declared type (e.g. ``int`` from ``int | EllipsisType``) when it returns ``False``.
+
     Examples:
 
-    >>> is_ellipses(...)
-    True
+      * ``True`` is expected on ``...``:
 
-    >>> is_ellipses(1)
-    False
+        >>> is_ellipses(...)
+        True
 
-    :param obj: object to be tested whether it was supplied by caller or not.
-    :return: ``True`` if the ``obj`` is missing and not supplied by caller, ``False`` otherwise.
+      * ``False`` is expected on any other value:
+
+        >>> is_ellipses(1)
+        False
+
+      * ``False`` is expected on ``None``, as it is not ``...``:
+
+        >>> is_ellipses(None)
+        False
+
+    :param obj: object to check.
+    :return: ``True`` if ``obj`` is ``...``, ``False`` otherwise.
     """
     return obj is ...
 
@@ -486,62 +526,42 @@ def fallback_on_none_strict[T](value: T | None, default_val: T) -> T:
     return cast(T, fallback_on_none(value, default_val))
 
 
+# Stays a TypeGuard, never TypeIs: bools are ints, yet this returns False for them. TypeIs[int] would make type
+# checkers drop int (and so bool) from the False branch, where True and False actually land.
 def strictly_int(value: object) -> TypeGuard[int]:
     """
-    Check if a value is strictly an integer but NOT a boolean.
+    Check whether ``value`` is an ``int`` but not a ``bool``.
 
-    This utility function is designed to distinguish between `int` and `bool` types
-    because in Python, `bool` is a subclass of `int` and would pass an `isinstance(value, int)`
-    check. This function returns `True` only if the value is a genuine integer
-    (excluding booleans).
+    ``bool`` is a subclass of ``int``, so ``isinstance(True, int)`` is ``True``. This check refuses bools, for
+    arguments that take integers but must not take booleans.
 
-    Usage of this function is crucial in contexts where the semantic difference between
-    integers and booleans must be maintained, such as argument validation for functions
-    that accept integers but must reject boolean values.
+    Type checkers narrow ``value`` to ``int`` only when this returns ``True``. A ``False`` result keeps the declared
+    type (e.g. ``int | str`` stays ``int | str``), because a ``bool``, which is an ``int``, may be there.
 
-    :param value: The value to be checked.
-    :return: `True` if `value` is an `int` but not a `bool`; otherwise `False`.
+    Examples:
 
-    :rtype: TypeGuard[int]
+      * ``True`` is expected on ints, including zero and negatives:
 
-    Examples::
-
-        >>> strictly_int(5)
+        >>> all(strictly_int(_value) for _value in (5, -10, 0))
         True
-        >>> strictly_int(-10)
-        True
-        >>> strictly_int(0)
-        True
-        >>> strictly_int(True)
-        False
-        >>> strictly_int(False)
-        False
-        >>> strictly_int(5.0)
-        False
-        >>> strictly_int("5")
-        False
-        >>> strictly_int(None)
-        False
-        >>> strictly_int([1, 2, 3])
-        False
-        >>> strictly_int(object())
+
+      * ``False`` is expected on bools, although they are ints:
+
+        >>> strictly_int(True) or strictly_int(False)
         False
 
-    This function helps static type checkers like mypy to narrow types::
+      * ``False`` is expected on values that only look like ints:
 
-        >>> from typing import reveal_type
-        >>> def test(x: int | bool | str) -> int:
-        ...     if strictly_int(x):
-        ...         reveal_type(x)  # Revealed type is 'int'
-        ...         return x + 1
-        ...     else:
-        ...         raise ValueError("Not strictly an int")
-        ...
-        >>> test(10)
-        11
-        >>> test(True)  # Raises ValueError
-        Traceback (most recent call last):
-        ValueError: Not strictly an int
+        >>> strictly_int(5.0) or strictly_int("5")
+        False
+
+      * ``False`` is expected on ``None`` and other objects:
+
+        >>> any(strictly_int(_value) for _value in (None, [1, 2, 3], object()))
+        False
+
+    :param value: value to check.
+    :return: ``True`` if ``value`` is an ``int`` but not a ``bool``, ``False`` otherwise.
     """
     return isinstance(value, int) and not isinstance(value, bool)
 

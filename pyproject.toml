@@ -15,6 +15,9 @@ maintainers = [
     {name = "Suhas Krishna Srivastava", email = "suhas.srivastava@vaastav.tech"}
 ]
 requires-python = ">=3.12"
+dependencies = [
+    "typing_extensions>=4.10; python_version < '3.13'", # TypeIs is in typing only from 3.13
+]
 
 classifiers = [
   "Development Status :: 1 - Planning",
@@ -48,7 +51,7 @@ issues = "https://github.com/Vaastav-Technologies/py-commons/issues"
 lint = ["ruff"]
 typecheck = ["mypy"]
 dev = [{include-group = "lint"}, {include-group = "typecheck"}]
-test = ["pytest"]
+test = ["pytest", "pytest-mypy-testing"]
 cover = [{include-group = "test"}, "pytest-cov"]
 multitest = ["tox"]
 doc = ["sphinx", "sphinx-argparse"]
