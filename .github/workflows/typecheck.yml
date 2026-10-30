@@ -28,4 +28,4 @@ jobs:
 
       - name: 🧠 Run Mypy (Static Type Check)
         run: |
-          mypy -p vt.utils.commons.commons --namespace-packages
+          mypy
