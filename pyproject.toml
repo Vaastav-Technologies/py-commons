@@ -45,6 +45,7 @@ license-files = ["LICEN[CS]E*", "AUTHORS.md"]
 homepage = "https://github.com/Vaastav-Technologies/py-commons"
 source = "https://github.com/Vaastav-Technologies/py-commons"
 issues = "https://github.com/Vaastav-Technologies/py-commons/issues"
+changelog = "https://github.com/Vaastav-Technologies/py-commons/blob/main/CHANGELOG.md"
 
 
 [dependency-groups]
